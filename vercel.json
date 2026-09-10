@@ -1,1 +1,8 @@
-{"cleanUrls":true,"trailingSlash":false}
+{
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "rewrites": [
+    { "source": "/logo.webp", "destination": "/logo.png" },
+    { "source": "/hero-office.webp", "destination": "/hero-office.svg" }
+  ]
+}
