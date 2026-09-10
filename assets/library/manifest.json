@@ -1,0 +1,43 @@
+{
+  "library_version": 1,
+  "updated": "2026-09-10",
+  "single_source_of_truth": "/assets/library/",
+  "active_assets": [
+    {
+      "id": "brand-logo",
+      "category": "logos",
+      "path": "/assets/library/logos/practice-perfect-logo.svg",
+      "format": "svg",
+      "usage": ["header", "footer"],
+      "status": "approved"
+    },
+    {
+      "id": "boardroom-hero",
+      "category": "heroes",
+      "path": "/assets/library/heroes/practice-perfect-boardroom-hero.webp",
+      "usage": ["home hero", "services hero", "about hero", "pricing hero", "what-we-fix hero"],
+      "status": "approved-active"
+    },
+    {
+      "id": "analytics-workspace",
+      "category": "general",
+      "path": "/assets/library/general/practice-perfect-analytics-workspace.webp",
+      "usage": ["services supporting panel", "our-system hero", "contact hero", "what-we-fix supporting section"],
+      "status": "approved-active"
+    },
+    {
+      "id": "performance-dashboard",
+      "category": "general",
+      "path": "/assets/library/general/practice-perfect-performance-dashboard.webp",
+      "usage": ["our-system", "what-we-fix"],
+      "status": "approved-active"
+    }
+  ],
+  "quality_policy": {
+    "no_placeholders": true,
+    "no_external_image_urls": true,
+    "preserve_masters": true,
+    "web_derivatives_from_master_only": true,
+    "avoid_upscaling": true
+  }
+}
