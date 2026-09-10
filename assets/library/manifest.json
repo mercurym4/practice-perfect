@@ -1,43 +1,48 @@
 {
-  "library_version": 1,
+  "version": 2,
   "updated": "2026-09-10",
-  "single_source_of_truth": "/assets/library/",
-  "active_assets": [
+  "policy": "assets/library is the website image single source of truth; high-resolution masters are retained separately from optimized web derivatives",
+  "assets": [
     {
-      "id": "brand-logo",
-      "category": "logos",
-      "path": "/assets/library/logos/practice-perfect-logo.svg",
-      "format": "svg",
-      "usage": ["header", "footer"],
-      "status": "approved"
+      "id": "logo",
+      "web": "/assets/library/logos/practice-perfect-logo.png",
+      "master": "/assets/library/masters/practice-perfect-logo-master.png",
+      "usage": "approved brand logo"
     },
     {
-      "id": "boardroom-hero",
-      "category": "heroes",
-      "path": "/assets/library/heroes/practice-perfect-boardroom-hero.webp",
-      "usage": ["home hero", "services hero", "about hero", "pricing hero", "what-we-fix hero"],
-      "status": "approved-active"
+      "id": "boardroom",
+      "web": "/assets/library/heroes/practice-perfect-boardroom-hero.webp",
+      "master": "/assets/library/masters/practice-perfect-boardroom-master.webp",
+      "dimensions": "1448x1086",
+      "usage": "hero/banner photography"
     },
     {
       "id": "analytics-workspace",
-      "category": "general",
-      "path": "/assets/library/general/practice-perfect-analytics-workspace.webp",
-      "usage": ["services supporting panel", "our-system hero", "contact hero", "what-we-fix supporting section"],
-      "status": "approved-active"
+      "web": "/assets/library/general/practice-perfect-analytics-workspace.webp",
+      "master": "/assets/library/masters/practice-perfect-analytics-workspace-master.webp",
+      "dimensions": "1440x1080 web / 1448x1086 master",
+      "usage": "services and supporting sections"
     },
     {
       "id": "performance-dashboard",
-      "category": "general",
-      "path": "/assets/library/general/practice-perfect-performance-dashboard.webp",
-      "usage": ["our-system", "what-we-fix"],
-      "status": "approved-active"
+      "web": "/assets/library/general/practice-perfect-performance-dashboard.webp",
+      "master": "/assets/library/masters/practice-perfect-performance-dashboard-master.webp",
+      "dimensions": "1440x1080 web / 1448x1086 master",
+      "usage": "Our System and What We Fix"
+    },
+    {
+      "id": "office-growth-dashboard",
+      "web": "/assets/library/general/practice-perfect-office-growth-dashboard.webp",
+      "master": "/assets/library/masters/practice-perfect-office-growth-dashboard-master.webp",
+      "dimensions": "1440x1080 web / 1448x1086 master",
+      "usage": "approved reusable growth/analytics imagery"
     }
   ],
-  "quality_policy": {
-    "no_placeholders": true,
-    "no_external_image_urls": true,
-    "preserve_masters": true,
-    "web_derivatives_from_master_only": true,
-    "avoid_upscaling": true
-  }
+  "rules": [
+    "Do not overwrite master assets with resized derivatives.",
+    "Do not reference temporary chat URLs or external generated-image URLs from production pages.",
+    "Generate responsive/optimized variants from a retained master.",
+    "Do not upscale a raster derivative beyond its natural dimensions.",
+    "Reuse approved imagery before generating visually redundant assets."
+  ]
 }
