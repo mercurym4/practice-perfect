@@ -77,3 +77,43 @@ body:not(.services-page) .custom-card{background:linear-gradient(135deg,var(--pp
 .results .chart-label{font-size:11px;color:#46627f;margin-top:5px}
 
 @media(max-width:650px){.brand img{width:165px;max-height:56px}.dash-shell{inset:16px;padding:16px}.dash-chart{height:160px}.dash-chart svg{height:124px}.chart-key{gap:10px;padding:0 8px}}
+
+/* Unified custom icon system */
+.svc-icon svg,.feature-icon svg,.mini-benefits b svg,.trust-icon svg,.stats svg{width:22px;height:22px;display:block;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.svc-icon,.feature-icon{background:linear-gradient(145deg,#f0f7ee,#e9f3fb);border:1px solid #d8e7da;box-shadow:inset 0 1px 0 #fff,0 7px 16px rgba(13,43,85,.06)}
+.mini-benefits b{width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:linear-gradient(145deg,#eef6ec,#eaf3fc);border:1px solid #d6e5da;flex:0 0 auto}
+.mini-benefits b svg{width:19px;height:19px}
+.trust-row>div{display:flex;align-items:center;justify-content:center;gap:9px}
+.trust-icon{width:34px;height:34px;display:grid;place-items:center;border-radius:10px;color:var(--green);background:#f0f7ee;border:1px solid #d9e8d6}
+.trust-icon svg{width:19px;height:19px}.trust-row span{margin-left:0}
+.stats>div>span{width:42px;height:42px;display:grid;place-items:center;border-radius:12px;background:linear-gradient(145deg,#eef6ec,#eaf3fc);border:1px solid #d7e5dc;color:var(--green)}
+.stats svg{width:21px;height:21px}
+
+/* Premium performance dashboard */
+.results .premium-chart{padding:0;background:#fff;border-color:#d9e5ef;box-shadow:0 22px 55px rgba(13,43,85,.14)}
+.premium-chart:before{display:none}
+.chart-top{display:flex;justify-content:space-between;align-items:center;padding:18px 20px 13px;border-bottom:1px solid #e5edf4;background:linear-gradient(135deg,#fafdff,#f3f8f5)}
+.chart-top span{display:block;color:#74879b;font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;margin-bottom:4px}
+.chart-top strong{font-family:"DM Serif Display",Georgia,serif;color:var(--navy);font-size:18px;font-weight:400}
+.trend-pill{padding:7px 10px;border-radius:999px;background:#eaf6e7;color:#408337;font-size:10px;font-weight:800;border:1px solid #cfe5c9;box-shadow:0 5px 13px rgba(79,143,69,.12)}
+.chart-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:12px 14px 5px}
+.chart-metrics>div{position:relative;padding:10px 11px;border:1px solid #e0e9f1;border-radius:11px;background:linear-gradient(155deg,#fff,#f6f9fb);overflow:hidden}
+.chart-metrics>div:after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:linear-gradient(90deg,#1477ff,#4f8f45)}
+.chart-metrics span{display:block;color:#75889c;font-size:8px;font-weight:700;margin-bottom:5px}.chart-metrics b{color:var(--navy);font-size:16px;letter-spacing:-.03em}.chart-metrics small{float:right;color:#4f8f45;font-size:8px;font-weight:800;margin-top:5px}
+.chart-body{display:grid;grid-template-columns:minmax(0,1fr) 112px;gap:8px;padding:6px 14px 10px}
+.main-plot{min-width:0;border:1px solid #e2ebf2;border-radius:12px;padding:7px 7px 5px;background:linear-gradient(180deg,#fbfdff,#f4f8fb)}
+.main-plot svg{display:block;width:100%;height:172px;filter:none!important}.premium-grid{stroke:#dfe8f0;stroke-width:1}.premium-area{fill:url(#homeArea)}.premium-line{fill:none;stroke-linecap:round;stroke-linejoin:round}.premium-line.primary{stroke:url(#homeLine);stroke-width:5;filter:drop-shadow(0 4px 5px rgba(20,119,255,.2))}.premium-line.secondary{stroke:#4f8f45;stroke-width:2.5;stroke-dasharray:7 7;opacity:.75}.premium-points circle{fill:#fff;stroke:#1477ff;stroke-width:3}.premium-points .end{stroke:#4f8f45;stroke-width:4}
+.plot-labels{display:flex;justify-content:space-between;padding:0 8px;color:#8798a9;font-size:7px;font-weight:700}
+.side-viz{display:grid;grid-template-rows:1fr 1fr;gap:8px}
+.conversion-ring,.source-bars{border:1px solid #e1eaf1;border-radius:12px;background:linear-gradient(155deg,#fff,#f3f8f5);display:grid;place-items:center;padding:8px}
+.conversion-ring>div,.mini-donut>div{width:68px;height:68px;border-radius:50%;display:grid;place-content:center;text-align:center;background:radial-gradient(circle at center,#fff 0 54%,transparent 56%),conic-gradient(#4f8f45 0 38%,#1477ff 38% 82%,#e4edf3 82%);box-shadow:0 7px 18px rgba(13,43,85,.10)}
+.conversion-ring b,.mini-donut b{display:block;color:var(--navy);font-size:15px;line-height:1}.conversion-ring span,.mini-donut span{font-size:7px;line-height:1.15;color:#71869a;margin-top:3px}
+.source-bars{display:block}.source-bars>span,.mini-bars>span{display:block;font-size:8px;font-weight:800;color:#6c8195;margin-bottom:8px}.source-bars>div,.mini-bars>div{height:54px;display:flex;gap:5px;align-items:end}.source-bars i,.mini-bars i{display:block;flex:1;height:var(--h);min-width:4px;border-radius:4px 4px 1px 1px;background:linear-gradient(180deg,#1477ff,#65aa55);box-shadow:0 3px 7px rgba(20,119,255,.15)}
+.chart-footer{display:flex;align-items:center;gap:14px;padding:0 17px 14px;color:#718599;font-size:8px;font-weight:700}.chart-footer span{display:flex;align-items:center;gap:5px}.chart-footer i{width:7px;height:7px;border-radius:50%;background:#1477ff}.chart-footer span:nth-child(2) i{background:#4f8f45}.chart-footer b{margin-left:auto;color:#526b82;font-size:8px}
+
+/* Rich compact dashboards used on About and Pricing */
+.dash-chart{height:188px;display:grid;grid-template-columns:minmax(0,1fr) 104px;gap:9px;padding:8px;background:linear-gradient(180deg,#fbfdff,#f2f7f4)}
+.dash-plot{min-width:0;border:1px solid #e0e9f0;border-radius:11px;background:#fff;padding:5px}.dash-plot svg{height:143px}.dash-plot .chart-key{padding:0 7px;gap:12px;font-size:8px}
+.dash-insights{display:grid;grid-template-rows:1fr 1fr;gap:8px}.mini-donut,.mini-bars{display:grid;place-items:center;border:1px solid #e0e9f0;border-radius:11px;background:#fff;padding:7px}.mini-donut>div{width:58px;height:58px}.mini-donut b{font-size:13px}.mini-bars{display:block}.mini-bars>div{height:40px;gap:4px}
+
+@media(max-width:650px){.chart-metrics{grid-template-columns:1fr}.chart-body{grid-template-columns:1fr}.side-viz{grid-template-columns:1fr 1fr;grid-template-rows:none}.chart-footer{flex-wrap:wrap}.chart-footer b{width:100%;margin-left:0}.dash-chart{grid-template-columns:1fr;height:auto}.dash-insights{grid-template-columns:1fr 1fr;grid-template-rows:none}.dash-shell{position:relative;inset:auto;margin:14px}.visual-panel.dashboard{min-height:auto}}
