@@ -12,14 +12,14 @@
     {
       "id": "boardroom",
       "web": "/assets/library/heroes/practice-perfect-boardroom-hero.webp",
-      "master": "/assets/library/masters/practice-perfect-boardroom-master.webp",
-      "dimensions": "1448x1086",
+      "master": "/assets/library/masters/practice-perfect-boardroom-master.png",
+      "dimensions": "1448x1086 web / 1448x1086 master",
       "usage": "hero/banner photography"
     },
     {
       "id": "analytics-workspace",
       "web": "/assets/library/general/practice-perfect-analytics-workspace.webp",
-      "master": "/assets/library/masters/practice-perfect-analytics-workspace-master.webp",
+      "master": "/assets/library/masters/practice-perfect-analytics-workspace-master.png",
       "dimensions": "1440x1080 web / 1448x1086 master",
       "usage": "services and supporting sections"
     },
@@ -33,7 +33,7 @@
     {
       "id": "office-growth-dashboard",
       "web": "/assets/library/general/practice-perfect-office-growth-dashboard.webp",
-      "master": "/assets/library/masters/practice-perfect-office-growth-dashboard-master.webp",
+      "master": "/assets/library/masters/practice-perfect-office-growth-dashboard-master.png",
       "dimensions": "1440x1080 web / 1448x1086 master",
       "usage": "approved reusable growth/analytics imagery"
     }
