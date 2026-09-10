@@ -71,6 +71,27 @@
       "master": "/assets/library/masters/generated/scalable-growth-path-master.png",
       "dimensions": "1672x941 web / 1672x941 master",
       "usage": "approved reusable growth and CTA imagery"
+    },
+    {
+      "id": "home-revenue-growth-engine",
+      "web": "/assets/library/generated/charts/home-revenue-growth-engine.webp",
+      "master": "/assets/library/masters/generated/home-revenue-growth-engine.png",
+      "dimensions": "1536x1024 web / 1536x1024 master",
+      "usage": "Home results visualization"
+    },
+    {
+      "id": "about-connected-growth-system",
+      "web": "/assets/library/generated/charts/about-connected-growth-system.webp",
+      "master": "/assets/library/masters/generated/about-connected-growth-system.png",
+      "dimensions": "1448x1086 web / 1448x1086 master",
+      "usage": "About operating-system visualization"
+    },
+    {
+      "id": "pricing-investment-impact",
+      "web": "/assets/library/generated/charts/pricing-investment-impact.webp",
+      "master": "/assets/library/masters/generated/pricing-investment-impact.png",
+      "dimensions": "1448x1086 web / 1448x1086 master",
+      "usage": "Pricing investment-to-impact visualization"
     }
   ],
   "rules": [
