@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 3,
   "updated": "2026-09-10",
   "policy": "assets/library is the website image single source of truth; high-resolution masters are retained separately from optimized web derivatives",
   "assets": [
@@ -36,6 +36,41 @@
       "master": "/assets/library/masters/practice-perfect-office-growth-dashboard-master.png",
       "dimensions": "1440x1080 web / 1448x1086 master",
       "usage": "approved reusable growth/analytics imagery"
+    },
+    {
+      "id": "what-we-fix-diagnostics-strategy",
+      "web": "/assets/library/generated/what-we-fix/diagnostics-strategy.webp",
+      "master": "/assets/library/masters/generated/what-we-fix-diagnostics-master.png",
+      "dimensions": "1672x941 web / 1672x941 master",
+      "usage": "What We Fix hero"
+    },
+    {
+      "id": "our-system-four-phases",
+      "web": "/assets/library/generated/our-system/four-phase-growth-system.webp",
+      "master": "/assets/library/masters/generated/our-system-four-phases-master.png",
+      "dimensions": "1672x941 web / 1672x941 master",
+      "usage": "Our System hero"
+    },
+    {
+      "id": "services-marketing-command-center",
+      "web": "/assets/library/generated/services/marketing-command-center.webp",
+      "master": "/assets/library/masters/generated/services-command-center-master.png",
+      "dimensions": "1448x1086 web / 1448x1086 master",
+      "usage": "Services hero"
+    },
+    {
+      "id": "about-leadership-workshop",
+      "web": "/assets/library/generated/about/leadership-workshop.webp",
+      "master": "/assets/library/masters/generated/about-leadership-workshop-master.png",
+      "dimensions": "1448x1086 web / 1448x1086 master",
+      "usage": "About hero"
+    },
+    {
+      "id": "scalable-growth-path",
+      "web": "/assets/library/generated/growth/scalable-growth-path.webp",
+      "master": "/assets/library/masters/generated/scalable-growth-path-master.png",
+      "dimensions": "1672x941 web / 1672x941 master",
+      "usage": "approved reusable growth and CTA imagery"
     }
   ],
   "rules": [
