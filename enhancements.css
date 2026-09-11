@@ -46,3 +46,28 @@ body:not(.services-page) .custom-card{background:linear-gradient(135deg,var(--pp
 .system-node b,.system-node small{display:block}.system-node b{font-size:15px}.system-node small{color:#c8d7e5;font-size:10px;margin-top:5px}
 .system-arrow{color:#5fa8ff;font-size:20px}
 @media(max-width:760px){.system-visual{grid-template-columns:1fr;gap:8px}.system-arrow{transform:rotate(90deg);text-align:center}.funnel-visual,.system-visual{min-height:auto}}
+
+/* Ultrawide image handling — preserves normal desktop/mobile layouts */
+@media (min-width:1700px){
+  body:not(.services-page) .hero-photo,
+  body:not(.services-page) .page-hero-photo,
+  body:not(.services-page) .story-image{
+    background:#eef3f6;
+  }
+  body:not(.services-page) .hero-photo img,
+  body:not(.services-page) .page-hero-photo img{
+    object-fit:contain;
+    object-position:center;
+  }
+  body:not(.services-page) .story-image img{
+    object-fit:contain;
+    object-position:center;
+    background:#eef3f6;
+  }
+  body:not(.services-page) .subhero-visual{
+    max-width:820px;
+    justify-self:end;
+    width:100%;
+    margin-right:0;
+  }
+}
