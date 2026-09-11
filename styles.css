@@ -3,3 +3,6 @@
 /* Canonical header logo scale: matches finalized Services page */
 .brand img{width:176px!important;height:auto!important;max-height:none!important;object-fit:contain!important}
 @media(max-width:650px){.brand img{width:145px!important;height:auto!important;max-height:none!important}}
+
+/* Footer social placeholders — add hrefs when profiles are ready */
+.social-icons{display:flex;align-items:center;gap:8px;margin:10px 0 12px}.social-icon{width:32px;height:32px;border:1px solid #d7e2e9;border-radius:50%;display:grid;place-items:center;color:var(--navy);background:#fff;transition:.2s}.social-icon svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.social-icon:hover{color:var(--green);border-color:#b9d2b3;background:var(--mint)}
