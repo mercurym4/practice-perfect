@@ -43,6 +43,27 @@
       "master": "/assets/library/masters/opportunity-to-measurable-growth-reference.png",
       "dimensions": "1008x608 crop / 1536x980 uploaded reference",
       "usage": "Homepage growth chart; exact uploaded dashboard pixels, cropped without rescaling or redesign"
+    },
+    {
+      "id": "approved-office-hero",
+      "web": "/assets/library/home/approved-office-hero.png",
+      "master": "/assets/library/masters/approved-green-services-reference.png",
+      "usage": "Homepage approved reference crop, unchanged pixels",
+      "crop": "798x453+650+66"
+    },
+    {
+      "id": "approved-monitor-workspace",
+      "web": "/assets/library/home/approved-monitor-workspace.png",
+      "master": "/assets/library/masters/approved-green-services-reference.png",
+      "usage": "Homepage approved reference crop, unchanged pixels",
+      "crop": "389x369+961+602"
+    },
+    {
+      "id": "approved-mountain-cta",
+      "web": "/assets/library/home/approved-mountain-cta.png",
+      "master": "/assets/library/masters/approved-green-services-reference.png",
+      "usage": "Homepage approved reference crop, unchanged pixels",
+      "crop": "1448x177+0+1359"
     }
   ],
   "rules": [
