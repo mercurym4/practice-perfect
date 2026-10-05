@@ -42,7 +42,7 @@
       "web": "/assets/library/home/opportunity-to-measurable-growth-dashboard.png",
       "master": "/assets/library/masters/opportunity-to-measurable-growth-reference.png",
       "dimensions": "1008x608 crop / 1536x980 uploaded reference",
-      "usage": "Homepage growth chart; exact uploaded dashboard pixels, cropped without rescaling or redesign"
+      "usage": "Home and About growth chart; exact uploaded dashboard pixels, cropped without rescaling or redesign"
     },
     {
       "id": "approved-office-reference",
@@ -64,6 +64,22 @@
       "master": "/assets/library/masters/approved-green-services-reference.png",
       "usage": "Services: exact cropped artwork from approved supplied reference",
       "crop": "1448x177+0+1359"
+    },
+    {
+      "id": "about-leadership-workshop",
+      "web": "/assets/library/about/leadership-workshop.webp",
+      "dimensions": "1448x1086",
+      "source_commit": "5b35d99",
+      "sha256": "a9013af797c081930697dea6deda419c9a3644cd6129a9d290b991e7deca1949",
+      "usage": "Original approved hero recovered byte-for-byte; self-hosted permanent asset"
+    },
+    {
+      "id": "pricing-scalable-growth-path",
+      "web": "/assets/library/pricing/scalable-growth-path.webp",
+      "dimensions": "1672x941",
+      "source_commit": "5b35d99",
+      "sha256": "92d4f5ea8e3914ed080ba7e87ef654ee4f33a594c592b6dc2df8a551d6d8c67d",
+      "usage": "Original approved hero recovered byte-for-byte; self-hosted permanent asset"
     }
   ],
   "rules": [
