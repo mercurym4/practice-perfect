@@ -204,11 +204,6 @@
 .home-mountain-art>img{display:block;width:100%;height:auto}
 .home-mountain-button{position:absolute;left:6.63%;top:61%;width:16.7%;height:27%;border-radius:7px}
 .home-mountain-button:focus-visible{outline:3px solid #fff;outline-offset:3px}
-.home-mountain-mobile{display:none}
 @media(max-width:800px){
- .home-mountain-button{display:none}
- .home-mountain-mobile{display:block;padding:24px 0 29px}
- .home-page .home-mountain-mobile .eyebrow{color:#b9dca8}
- .home-page .home-mountain-mobile h2{color:#fff;font-size:30px;max-width:560px}
- .home-page .home-mountain-mobile p{color:#dbe6ed;font-size:14px;line-height:1.6;max-width:620px;margin:0 0 19px}
+ .home-mountain-button{inset:0;width:100%;height:100%;border-radius:0}
 }

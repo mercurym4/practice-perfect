@@ -42,10 +42,6 @@
 .mountain-desktop img{width:100%;height:auto;display:block}
 .mountain-button{position:absolute;left:6.63%;top:61%;width:16.7%;height:27%;border-radius:7px}
 .mountain-button:focus-visible{outline:3px solid #fff;outline-offset:3px}
-.mountain-mobile{display:none;padding:30px 0;color:#fff}
-.mountain-mobile h2{color:#fff;font-size:30px;line-height:1.15;margin:8px 0 12px}
-.mountain-mobile p{font-size:14px;line-height:1.55;color:#dbe6ed;margin:0 0 20px}
-.mountain-mobile .eyebrow{color:#b5d8a9}
 @media(max-width:1448px){.services-reference .hero-media{margin-right:-6.6vw}}
 @media(min-width:1700px){.services-reference .hero-media{margin-right:0}}
 @media(max-width:1100px){
@@ -81,7 +77,7 @@
  .services-reference .partner-media img{max-width:390px;margin:auto}
  .services-reference .process-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
  .services-reference .step:after{display:none}
- .mountain-desktop{display:block}.mountain-desktop .mountain-button{display:none}.mountain-mobile{display:block}
+ .mountain-desktop{display:block}.mountain-desktop .mountain-button{inset:0;width:100%;height:100%;border-radius:0}
 }
 
 .services-reference .seg-icon{display:block;flex:0 0 27px;width:27px;height:27px}.services-reference .seg-icon svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
