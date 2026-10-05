@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /preview/
+Disallow: /services-green
+Disallow: /responsive-check
+Sitemap: https://practice-perfect-xi.vercel.app/sitemap.xml
