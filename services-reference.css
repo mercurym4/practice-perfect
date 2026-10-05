@@ -1,0 +1,87 @@
+/* Approved Services composition, using the site's existing Inter typography. */
+.services-reference{font-family:Inter,Arial,sans-serif}
+.services-reference h1,.services-reference h2,.services-reference h3,
+.services-reference .step strong,.services-reference .hero-overlay strong{font-family:Inter,Arial,sans-serif;font-weight:700;letter-spacing:-.035em}
+.services-reference .container{width:min(1256px,86.8%)}
+.services-reference .hero{padding:0;overflow:hidden}
+.services-reference .hero-grid{grid-template-columns:44% 56%;gap:0}
+.services-reference .hero-copy{padding:38px 20px 28px 0}
+.services-reference h1{font-size:52px;line-height:1.04;max-width:555px}
+.services-reference .hero-copy p{font-size:16px;line-height:1.5}
+.services-reference .hero-media{min-height:0;margin-right:calc((1256px - 100vw)/2);display:flex;align-items:center;background:#fff;overflow:visible}
+.services-reference .hero-media img{width:100%;height:auto;object-fit:contain}
+.services-reference .section{padding:30px 0 20px}
+.services-reference .section-head{max-width:880px;margin-bottom:18px}
+.services-reference h2{font-size:38px;line-height:1.08}
+.services-reference .section-head p{font-size:15px;line-height:1.45}
+.services-reference .cap-layout{grid-template-columns:minmax(0,1fr) 390px;gap:16px}
+.services-reference .services-grid{gap:10px}
+.services-reference .service-card{position:relative;display:grid;grid-template-columns:54px minmax(0,1fr);gap:0 12px;padding:17px 14px 35px;min-height:162px;align-content:start;background:#fff}
+.services-reference .service-card .icon{grid-column:1;grid-row:1/3;width:49px;height:49px;margin:0;background:#edf5ef}
+.services-reference .service-card .icon svg{width:25px;height:25px}
+.services-reference .service-card h3{grid-column:2;font-size:17px;line-height:1.15;margin-bottom:7px}
+.services-reference .service-card p{grid-column:2;font-size:12px;line-height:1.45}
+.services-reference .service-card a{position:absolute;right:12px;bottom:10px;width:26px;height:26px;border-radius:50%;padding:0;display:grid;place-items:center;box-shadow:0 2px 8px rgba(13,43,85,.09);background:#fff}
+.services-reference .partner-column{margin-top:-85px;min-width:0;display:flex;flex-direction:column}
+.services-reference .partner-heading{font-size:10px;color:var(--navy);justify-content:center;margin-bottom:25px;min-height:15px}
+.services-reference .partner-panel{display:flex;flex-direction:column;height:auto;flex:1;background:#edf5ef}
+.services-reference .partner-media{min-height:0}
+.services-reference .partner-media img{width:100%;height:auto;object-fit:contain}
+.services-reference .partner-copy{padding:20px 24px}
+.services-reference .partner-copy .eyebrow{font-size:10px}
+.services-reference .partner-copy h3{font-size:28px;line-height:1.1;margin:10px 0}
+.services-reference .partner-copy p{font-size:13px;line-height:1.5}
+.services-reference .partner-copy a{font-size:11px}
+.services-reference .process{margin-top:0;padding:24px 0;background:#f2f7f5}
+.services-reference .process-grid{grid-template-columns:260px repeat(4,minmax(0,1fr));gap:24px}
+.services-reference .process-intro h3{font-size:27px}
+.services-reference .step strong{font-size:16px}
+.services-reference .step span{font-size:11px}
+.reference-mountain-cta{background:#123861}
+.mountain-desktop{position:relative;max-width:1448px;margin:auto}
+.mountain-desktop img{width:100%;height:auto;display:block}
+.mountain-button{position:absolute;left:6.63%;top:61%;width:16.7%;height:27%;border-radius:7px}
+.mountain-button:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.mountain-mobile{display:none;padding:30px 0;color:#fff}
+.mountain-mobile h2{color:#fff;font-size:30px;line-height:1.15;margin:8px 0 12px}
+.mountain-mobile p{font-size:14px;line-height:1.55;color:#dbe6ed;margin:0 0 20px}
+.mountain-mobile .eyebrow{color:#b5d8a9}
+@media(max-width:1448px){.services-reference .hero-media{margin-right:-6.6vw}}
+@media(min-width:1700px){.services-reference .hero-media{margin-right:0}}
+@media(max-width:1100px){
+ .services-reference .container{width:calc(100% - 44px)}
+ .services-reference .hero-copy{padding-top:28px}
+ .services-reference h1{font-size:43px}
+ .services-reference .hero-media{margin-right:-22px}
+ .services-reference .cap-layout{grid-template-columns:minmax(0,1fr) 310px}
+ .services-reference .services-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .services-reference .partner-column{margin-top:0}
+ .services-reference .partner-heading{margin-bottom:14px}
+ .services-reference .process-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+ .services-reference .process-intro{grid-column:1/-1}
+}
+@media(max-width:760px){
+ .services-reference .container{width:calc(100% - 28px)}
+ .services-reference .hero-grid,.services-reference .cap-layout{grid-template-columns:1fr}
+ .services-reference .hero-copy{padding:28px 0 24px}
+ .services-reference h1{font-size:38px}
+ .services-reference .hero-media{margin:0 -14px}
+ .services-reference .actions{flex-wrap:wrap}
+ .services-reference .segments{display:flex;flex-wrap:wrap;gap:12px;margin-top:23px;padding-bottom:0}
+ .services-reference .segment{font-size:11px;margin:0;padding-right:10px}
+ .services-reference .section-head h2{font-size:30px}
+ .services-reference .section-head p{font-size:14px}
+ .services-reference .services-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .services-reference .service-card{grid-template-columns:1fr;gap:8px;padding:15px 12px 35px;min-height:0}
+ .services-reference .service-card .icon{grid-row:auto;grid-column:1;width:40px;height:40px}
+ .services-reference .service-card h3,.services-reference .service-card p{grid-column:1}
+ .services-reference .service-card h3{font-size:16px}
+ .services-reference .partner-column{margin-top:14px}
+ .services-reference .partner-heading{justify-content:flex-start}
+ .services-reference .partner-media img{max-width:390px;margin:auto}
+ .services-reference .process-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
+ .services-reference .step:after{display:none}
+ .mountain-desktop{display:none}.mountain-mobile{display:block}
+}
+
+.services-reference .seg-icon{display:block;flex:0 0 27px;width:27px;height:27px}.services-reference .seg-icon svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}

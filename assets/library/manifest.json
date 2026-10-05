@@ -45,24 +45,24 @@
       "usage": "Homepage growth chart; exact uploaded dashboard pixels, cropped without rescaling or redesign"
     },
     {
-      "id": "approved-office-hero",
-      "web": "/assets/library/home/approved-office-hero.png",
+      "id": "approved-office-reference",
+      "web": "/assets/library/services/approved-office-reference.png",
       "master": "/assets/library/masters/approved-green-services-reference.png",
-      "usage": "Homepage approved reference crop, unchanged pixels",
+      "usage": "Services: exact cropped artwork from approved supplied reference",
       "crop": "798x453+650+66"
     },
     {
-      "id": "approved-monitor-workspace",
-      "web": "/assets/library/home/approved-monitor-workspace.png",
+      "id": "approved-monitor-reference",
+      "web": "/assets/library/services/approved-monitor-reference.png",
       "master": "/assets/library/masters/approved-green-services-reference.png",
-      "usage": "Homepage approved reference crop, unchanged pixels",
+      "usage": "Services: exact cropped artwork from approved supplied reference",
       "crop": "389x369+961+602"
     },
     {
-      "id": "approved-mountain-cta",
-      "web": "/assets/library/home/approved-mountain-cta.png",
+      "id": "approved-mountain-reference",
+      "web": "/assets/library/services/approved-mountain-reference.png",
       "master": "/assets/library/masters/approved-green-services-reference.png",
-      "usage": "Homepage approved reference crop, unchanged pixels",
+      "usage": "Services: exact cropped artwork from approved supplied reference",
       "crop": "1448x177+0+1359"
     }
   ],
