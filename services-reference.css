@@ -81,7 +81,7 @@
  .services-reference .partner-media img{max-width:390px;margin:auto}
  .services-reference .process-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
  .services-reference .step:after{display:none}
- .mountain-desktop{display:none}.mountain-mobile{display:block}
+ .mountain-desktop{display:block}.mountain-desktop .mountain-button{display:none}.mountain-mobile{display:block}
 }
 
 .services-reference .seg-icon{display:block;flex:0 0 27px;width:27px;height:27px}.services-reference .seg-icon svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
