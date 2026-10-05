@@ -85,3 +85,16 @@
 }
 
 .services-reference .seg-icon{display:block;flex:0 0 27px;width:27px;height:27px}.services-reference .seg-icon svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+
+@media(min-width:761px) and (max-width:960px){
+ .services-reference .hero-grid,.services-reference .cap-layout{grid-template-columns:1fr}
+ .services-reference .hero-copy{padding:28px 0 24px}
+ .services-reference .hero-copy h1{max-width:720px;font-size:42px}
+ .services-reference .hero-copy p{max-width:700px}
+ .services-reference .hero-media{margin:0 -22px}
+ .services-reference .segments{display:flex;flex-wrap:wrap;gap:14px;padding-bottom:0;margin-top:24px}
+ .services-reference .partner-column{margin-top:14px}
+ .services-reference .partner-heading{justify-content:flex-start}
+ .services-reference .partner-panel{display:grid;grid-template-columns:1fr 1fr;align-items:center}
+ .services-reference .services-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
