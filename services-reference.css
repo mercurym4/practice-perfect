@@ -5,10 +5,10 @@
 .services-reference .container{width:min(1256px,86.8%)}
 .services-reference .hero{padding:0;overflow:hidden}
 .services-reference .hero-grid{grid-template-columns:44% 56%;gap:0}
-.services-reference .hero-copy{padding:38px 20px 28px 0}
-.services-reference h1{font-size:52px;line-height:1.04;max-width:555px}
+.services-reference .hero-copy{padding:30px 20px 20px 0}
+.services-reference h1{font-size:44px;line-height:1.04;max-width:555px}
 .services-reference .hero-copy p{font-size:16px;line-height:1.5}
-.services-reference .hero-media{min-height:0;margin-right:calc((1256px - 100vw)/2);display:flex;align-items:center;background:#fff;overflow:visible}
+.services-reference .hero-media{min-height:0;margin-right:calc((1256px - 100vw)/2);display:flex;align-items:flex-start;background:#fff;overflow:visible}
 .services-reference .hero-media img{width:100%;height:auto;object-fit:contain}
 .services-reference .section{padding:30px 0 20px}
 .services-reference .section-head{max-width:880px;margin-bottom:18px}
@@ -22,7 +22,7 @@
 .services-reference .service-card h3{grid-column:2;font-size:17px;line-height:1.15;margin-bottom:7px}
 .services-reference .service-card p{grid-column:2;font-size:12px;line-height:1.45}
 .services-reference .service-card a{position:absolute;right:12px;bottom:10px;width:26px;height:26px;border-radius:50%;padding:0;display:grid;place-items:center;box-shadow:0 2px 8px rgba(13,43,85,.09);background:#fff}
-.services-reference .partner-column{margin-top:-85px;min-width:0;display:flex;flex-direction:column}
+.services-reference .partner-column{margin-top:-120px;min-width:0;display:flex;flex-direction:column}
 .services-reference .partner-heading{font-size:10px;color:var(--navy);justify-content:center;margin-bottom:25px;min-height:15px}
 .services-reference .partner-panel{display:flex;flex-direction:column;height:auto;flex:1;background:#edf5ef}
 .services-reference .partner-media{min-height:0}
