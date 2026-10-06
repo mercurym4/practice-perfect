@@ -11,14 +11,14 @@ Updated October 6, 2026 (America/Chicago).
 - Preserved the exact About dashboard, approved Pricing diagnostic, Services visual benchmark, and single mountain banner.
 - Contact hero: removed decorative empty boxes; retained the next-step card and tightened spacing.
 - Homepage footer: replaced decorative newsletter imitation with a real link to the existing Contact form.
-- Contact send: Resend accepted a clearly labeled live test to mike@practiceperfect.us after key replacement.
+- Contact send: Resend accepted a clearly labeled live test to mike@practiceperfect.us after key replacement. User confirmed inbox receipt October 6, 2026.
 - Meta descriptions, canonical URLs for the primary practiceperfect.us domain, sitemap, and accessible form labels are present.
 
 - Namecheap apex A record supplied from Vercel: @ to 216.150.1.1; user reported saving it. Primary HTTPS domain now serves the approved site.
 - Updated all seven canonical URLs, sitemap entries, and robots sitemap URL to practiceperfect.us.
 
-## Pending
+## Launch verification status
 
-- User to confirm the test email reached mike@practiceperfect.us, checking inbox and spam later; this does not block visual work.
+All listed launch checks are complete, including inbox delivery confirmation.
 
 Do not claim custom-domain launch or inbox delivery until each is verified. Do not expose API keys or change email DNS records as part of web routing.
