@@ -39,9 +39,13 @@ module.exports = async function contact(req, res) {
       body: JSON.stringify({ from: `Practice Perfect <${CONTACT_FROM_EMAIL}>`, to: [CONTACT_TO_EMAIL], reply_to: values.email, subject: 'Practice Perfect — Strategy Call Request', text })
     });
     const result = await response.json();
-    if (!response.ok || !result.id) throw new Error('Email provider did not accept request');
+    if (!response.ok || !result.id) {
+      console.error('Contact email rejected', { status: response.status, code: result.name || 'unknown' });
+      throw new Error('Email provider did not accept request');
+    }
     return res.status(200).json({ ok: true, requestId: result.id });
-  } catch {
+  } catch (error) {
+    console.error('Contact email send failed', { code: error.name });
     return res.status(502).json({ error: 'Your request could not be confirmed. Please try again or email mike@practiceperfect.us directly.' });
   }
 };
