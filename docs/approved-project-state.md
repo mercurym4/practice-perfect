@@ -27,4 +27,4 @@ Services remains the master visual benchmark. Preserve the approved navy/blue/gr
 
 ## Contact delivery status
 
-The confirmed recipient is `mike@practiceperfect.us` (the earlier .com address was corrected by the user). The form uses the existing Resend integration. Live verification returned 401 Unauthorized from Resend for the existing sending key. Delivery is blocked pending a valid `RESEND_API_KEY`; do not describe email delivery as working until the deployed form test succeeds. Never place credentials in project history or source control.
+The confirmed recipient is `mike@practiceperfect.us` (the earlier .com address was corrected by the user). The user replaced the Resend sending key on October 5, 2026. Production was redeployed, and the actual live form successfully submitted a clearly labeled test to `mike@practiceperfect.us`; Resend accepted it and the page displayed success. The form cleared its fields afterward. Inbox receipt requires user confirmation and has not been independently verified. Proof: `practice-perfect-contact-send-success.jpg`. Never place credentials in project history or source control.
