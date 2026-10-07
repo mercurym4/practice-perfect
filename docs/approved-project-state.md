@@ -28,3 +28,11 @@ Services remains the master visual benchmark. Preserve the approved navy/blue/gr
 ## Contact delivery status
 
 The confirmed recipient is `mike@practiceperfect.us` (the earlier .com address was corrected by the user). The user replaced the Resend sending key on October 5, 2026. Production was redeployed, and the actual live form successfully submitted a clearly labeled test to `mike@practiceperfect.us`; Resend accepted it and the page displayed success. The form cleared its fields afterward. Inbox receipt requires user confirmation and has not been independently verified. Proof: `practice-perfect-contact-send-success.jpg`. Never place credentials in project history or source control.
+
+## Public content boundary (October 7, 2026)
+
+User instruction: stop revealing trade secrets. Public content must focus on client problems, business impact, service fit, and next steps. Keep proprietary methods, formulas, playbooks, scripts, internal workflows, and operating instructions private. The public KPI how-to guide was replaced with an intake warning-signs article.
+
+## Publication approval rule — October 7, 2026
+
+User instruction: do not publish anything until explicitly approved. Prepare concrete drafts and scoped changes for review. Do not push publication-triggering commits, deploy, or change the live site without approval for the proposed result.

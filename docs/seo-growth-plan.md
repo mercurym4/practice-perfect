@@ -23,12 +23,12 @@ Practice Growth Audit is now implemented at /services/practice-growth-audit with
 
 ## Content backlog
 
-Start with two substantive articles per month as a proposed cadence, not an activated schedule. Draft from real expertise, use clear definitions and practical steps, and link to the relevant service and contact page.
+Start with two substantive articles per month as a proposed cadence, not an activated schedule. Publish client-facing content about problems, business impact, service fit, and next steps. Keep proprietary methodology private. Link to the relevant service and contact page.
 
-1. Which intake KPIs should a law firm track? Define contact, booking, show, and hire rates with consistent denominators.
-2. What does a practice growth audit examine? Explain inputs, bottlenecks, deliverables, and next steps.
+1. Signs your law firm intake is losing opportunities: client-facing warning signs and service fit.
+2. When does a practice benefit from a growth audit? Discuss business needs and engagement fit.
 3. When should a practice hire fractional sales leadership? Explain fit, responsibilities, and engagement limits.
-4. How do you find lost opportunities between marketing and intake? Provide an operational diagnostic.
+4. Why more marketing may not resolve a conversion problem: explain business impact without an operational diagnostic.
 
 No invented outcomes, testimonials, clients, credentials, or benchmarks. Real case studies require approved source evidence and permission to publish identifying details. Dashboard artwork is not case-study evidence.
 
@@ -47,4 +47,12 @@ No recurring automation, independent agents, paid subscriptions, outreach, or ac
 
 ## Next implementation
 
-Practice Growth Audit page implemented from existing Services and Pricing scope, including the published $1,500 starting price, the three existing deliverables, accessible questions and answers, and Service/WebPage/BreadcrumbList structured data. No new outcome claims, testimonials, timelines, or imagery introduced. Law Firm Intake Consulting and Fractional Sales Leadership implemented using existing What We Fix, Services, and Pricing scope. Intake has no invented standalone package; it points to the existing engagement options. Fractional pricing remains $3,500+ per month. Both pages include practical questions and answers and Service/WebPage/BreadcrumbList markup. The intake KPI article and Resources entry point are implemented at /resources/law-firm-intake-kpis and /resources, with defined formulas, a clearly hypothetical example, official CRM references, Article/BreadcrumbList markup, contextual links, and sitemap entries. Next: verified business profiles and case-study evidence. Approve factual business evidence before adding case studies.
+Practice Growth Audit page implemented from existing Services and Pricing scope, including the published $1,500 starting price, the three existing deliverables, accessible questions and answers, and Service/WebPage/BreadcrumbList structured data. No new outcome claims, testimonials, timelines, or imagery introduced. Law Firm Intake Consulting and Fractional Sales Leadership implemented using existing What We Fix, Services, and Pricing scope. Intake has no invented standalone package; it points to the existing engagement options. Fractional pricing remains $3,500+ per month. Both pages include practical questions and answers and Service/WebPage/BreadcrumbList markup. The initial KPI guide was replaced at its existing URL with a client-facing article about intake warning signs, business impact, and engagement fit. Formulas, worked examples, measurement definitions, and operating instructions were removed from the published article and its Resources promotion. Keep existing links working. Article/BreadcrumbList markup and sitemap entries remain. Next: verified business profiles and case-study evidence. Approve factual business evidence before adding case studies.
+
+## Public content boundary — user direction, October 7, 2026
+
+Do not publish Practice Perfect trade secrets or proprietary methodology. Public articles should explain client problems, business consequences, fit, and benefits. Keep formulas, implementation playbooks, scripts, internal workflows, and operational checklists private. Do not turn internal work into public how-to guides.
+
+## Publication approval rule — October 7, 2026
+
+User instruction: do not publish anything until explicitly approved. Prepare concrete drafts and scoped changes for review. Do not push publication-triggering commits, deploy, or change the live site without approval for the proposed result.
