@@ -19,7 +19,7 @@ These are initial intent hypotheses informed by existing offerings and a public 
 | 2 | Law firm lead conversion and follow-up systems | /what-we-fix | Support the intake service page |
 | 3 | Website design, SEO, PPC, direct mail, PI/MVA leads | /services | Expand after core services have useful dedicated coverage |
 
-Planned URLs are not published and must not be added to the sitemap before they exist. Avoid creating similar thin pages for each city or keyword variation.
+Practice Growth Audit is now implemented at /services/practice-growth-audit with internal links from Home, Services, and Pricing and a sitemap entry. Other planned URLs are not published and must not be added to the sitemap before they exist. Avoid creating similar thin pages for each city or keyword variation.
 
 ## Content backlog
 
@@ -47,4 +47,4 @@ No recurring automation, independent agents, paid subscriptions, outreach, or ac
 
 ## Next implementation
 
-Draft the practice growth audit page using existing scope and the approved site styling. Confirm service deliverables against the current pricing page. Add relevant internal links only when the page is published. Build the intake and fractional leadership pages next; approve factual business evidence before adding case studies.
+Practice Growth Audit page implemented from existing Services and Pricing scope, including the published $1,500 starting price, the three existing deliverables, accessible questions and answers, and Service/WebPage/BreadcrumbList structured data. No new outcome claims, testimonials, timelines, or imagery introduced. Build the intake and fractional leadership pages next; approve factual business evidence before adding case studies.
