@@ -19,6 +19,6 @@ Updated October 6, 2026 (America/Chicago).
 
 ## Launch verification status
 
-All listed launch checks are complete, including inbox delivery confirmation.
+Core website launch checks and inbox delivery are complete. Visitor analytics collection is confirmed. Search Console property verification and homepage indexing request are complete; actual indexing and successful sitemap processing remain pending. See measurement-setup.md and seo-growth-plan.md.
 
 Do not claim custom-domain launch or inbox delivery until each is verified. Do not expose API keys or change email DNS records as part of web routing.
