@@ -1,6 +1,6 @@
 # Practice Perfect search growth plan
 
-Updated October 6, 2026 (America/Chicago).
+Updated October 7, 2026 (America/Chicago).
 
 ## Objective and baseline
 
@@ -19,7 +19,7 @@ These are initial intent hypotheses informed by existing offerings and a public 
 | 2 | Law firm lead conversion and follow-up systems | /what-we-fix | Support the intake service page |
 | 3 | Website design, SEO, PPC, direct mail, PI/MVA leads | /services | Expand after core services have useful dedicated coverage |
 
-Practice Growth Audit is now implemented at /services/practice-growth-audit with internal links from Home, Services, and Pricing and a sitemap entry. Other planned URLs are not published and must not be added to the sitemap before they exist. Avoid creating similar thin pages for each city or keyword variation.
+Practice Growth Audit is now implemented at /services/practice-growth-audit with internal links from Home, Services, and Pricing and a sitemap entry. Law Firm Intake Consulting and Fractional Sales Leadership are now implemented at their mapped URLs, with contextual internal links and sitemap entries. Other planned URLs are not published and must not be added to the sitemap before they exist. Avoid creating similar thin pages for each city or keyword variation.
 
 ## Content backlog
 
@@ -47,4 +47,4 @@ No recurring automation, independent agents, paid subscriptions, outreach, or ac
 
 ## Next implementation
 
-Practice Growth Audit page implemented from existing Services and Pricing scope, including the published $1,500 starting price, the three existing deliverables, accessible questions and answers, and Service/WebPage/BreadcrumbList structured data. No new outcome claims, testimonials, timelines, or imagery introduced. Build the intake and fractional leadership pages next; approve factual business evidence before adding case studies.
+Practice Growth Audit page implemented from existing Services and Pricing scope, including the published $1,500 starting price, the three existing deliverables, accessible questions and answers, and Service/WebPage/BreadcrumbList structured data. No new outcome claims, testimonials, timelines, or imagery introduced. Law Firm Intake Consulting and Fractional Sales Leadership implemented using existing What We Fix, Services, and Pricing scope. Intake has no invented standalone package; it points to the existing engagement options. Fractional pricing remains $3,500+ per month. Both pages include practical questions and answers and Service/WebPage/BreadcrumbList markup. Next: a useful intake KPI article and resources entry point, followed by verified business profiles and case-study evidence. Approve factual business evidence before adding case studies.
