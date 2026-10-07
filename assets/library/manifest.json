@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updated": "2026-10-05",
+  "updated": "2026-10-07",
   "policy": "assets/library is the website image single source of truth; high-resolution masters are retained separately from optimized web derivatives",
   "assets": [
     {
@@ -80,6 +80,19 @@
       "source_commit": "5b35d99",
       "sha256": "92d4f5ea8e3914ed080ba7e87ef654ee4f33a594c592b6dc2df8a551d6d8c67d",
       "usage": "Original approved hero recovered byte-for-byte; self-hosted permanent asset"
+    },
+    {
+      "id": "services-monitor-sharp-v2",
+      "master": "/assets/library/masters/services-monitor-sharp-v2.png",
+      "web": "/assets/library/services/monitor-sharp-v2-1288.webp",
+      "dimensions": "1288x1221",
+      "variants": [
+        390,
+        780,
+        1288
+      ],
+      "usage": "Services partner panel: high-resolution restoration of approved monitor composition; original reference retained",
+      "method": "Built-in image generation edit: restore crisp monitor details and exact screen wording, preserve approved scene and palette."
     }
   ],
   "rules": [
