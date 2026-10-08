@@ -64,3 +64,7 @@ Mike approved the eight service article drafts. Published the approved wording a
 ## Updated publishing authorization — October 7, 2026, 9:55 PM America/Chicago
 
 Mike superseded the per-publication approval requirement: “As long as we are not giving away trade secrets or company strategies you can proceed with drafting and publishing without my approval.” Client-facing service content may now be drafted and published autonomously. Preserve the approved site design. Keep proprietary methods, formulas, scripts, workflows, playbooks and company strategies private. Do not invent claims, credentials, client results or new commercial terms. This authorization does not grant account access, paid upgrades or outreach.
+
+## Dedicated marketing service pages — October 7, 2026
+
+Added SEO Marketing and PPC Marketing pages using the existing dedicated-service layout and previously published scope. Starting prices remain $2,000+ per month and $1,500+ per month. Content explains engagement fit, differences, pricing questions, and outcome limits without publishing internal methods or company strategies. Linked from existing Home, Services, and related Resources articles; added sitemap entries. No CSS, imagery, or other page content changed. Website Design and Website Audit + Overhaul pages were published and verified in the preceding release. Next service coverage: Debt Defense Direct Mail and PI / MVA Lead Generation; use existing custom-quote terms and avoid invented lead guarantees.
