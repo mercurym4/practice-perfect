@@ -1,0 +1,7 @@
+# Internal notes, checks, and unapproved preview pages are not website content.
+docs/
+tests/
+scripts/
+preview/
+services-green.html
+**/*.md

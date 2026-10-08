@@ -40,3 +40,7 @@ User instruction: do not publish anything until explicitly approved. Prepare con
 ## Updated publishing authorization — October 7, 2026, 9:55 PM America/Chicago
 
 Mike superseded the per-publication approval requirement: “As long as we are not giving away trade secrets or company strategies you can proceed with drafting and publishing without my approval.” Client-facing service content may now be drafted and published autonomously. Preserve the approved site design. Keep proprietary methods, formulas, scripts, workflows, playbooks and company strategies private. Do not invent claims, credentials, client results or new commercial terms. This authorization does not grant account access, paid upgrades or outreach.
+
+## Deployment privacy boundary — October 7, 2026
+
+A live audit found /docs/seo-growth-plan.md and /docs/approved-project-state.md publicly served with HTTP 200, along with /tests/analytics.test.cjs. These are internal repository files, not approved website content. Added deployment exclusions for docs, tests, scripts, preview pages, services-green.html, and Markdown notes including asset-library documentation. Keep repository history intact; do not publish these files as web content. Verify excluded paths return 404 and approved pages, assets, analytics, and the contact API continue to work after deployment. Existing retained deployment URLs may still contain their earlier files; exclusion of the new release does not remove historical deployments or copies.
