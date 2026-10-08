@@ -56,3 +56,7 @@ Do not publish Practice Perfect trade secrets or proprietary methodology. Public
 ## Publication approval rule — October 7, 2026
 
 User instruction: do not publish anything until explicitly approved. Prepare concrete drafts and scoped changes for review. Do not push publication-triggering commits, deploy, or change the live site without approval for the proposed result.
+
+## Approved service articles — October 7, 2026
+
+Mike approved the eight service article drafts. Published the approved wording as client-facing Resources articles for audit, sprint, leadership, website design/overhaul, SEO, PPC, debt-defense direct mail, and PI/MVA lead generation. Added Resources cards and sitemap entries only; reused existing article layout. No proprietary methods or additional unapproved articles included. Future content still requires explicit approval.
