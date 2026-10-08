@@ -17,3 +17,7 @@ Updated October 6, 2026 (America/Chicago).
 - Actual homepage and other-page indexing is not confirmed. An accepted request does not establish indexing or rankings.
 - strategy_call_sent instrumentation executes only after a successful API response with a provider ID and deduplicates IDs per page. Actual custom-event collection is unverified; a supported paid plan may be required. No plan upgrade authorized.
 - Search query, ranking, and conversion baselines need real dashboard data as traffic develops.
+
+## Tracking implementation — October 7, 2026
+
+Added delegated service_clicked events with an allowlisted service slug and strategy_call_clicked events with header/footer/content placement. No link text, query values, fragments, contact values, or email-provider IDs are sent as custom properties. Existing strategy_call_sent fires only after an accepted API response with a provider ID and deduplicates that ID per page; the ID is not sent to analytics. Tests verify production-host restriction, sensitive URL stripping, event allowlists, duplicate accepted responses, failed responses, and measurement failure isolation. Live custom-event collection remains pending verification. Do not submit a fabricated lead or send an unsolicited test email just to create a conversion event.
