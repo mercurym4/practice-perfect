@@ -60,3 +60,7 @@ User instruction: do not publish anything until explicitly approved. Prepare con
 ## Approved service articles — October 7, 2026
 
 Mike approved the eight service article drafts. Published the approved wording as client-facing Resources articles for audit, sprint, leadership, website design/overhaul, SEO, PPC, debt-defense direct mail, and PI/MVA lead generation. Added Resources cards and sitemap entries only; reused existing article layout. No proprietary methods or additional unapproved articles included. Future content still requires explicit approval.
+
+## Updated publishing authorization — October 7, 2026, 9:55 PM America/Chicago
+
+Mike superseded the per-publication approval requirement: “As long as we are not giving away trade secrets or company strategies you can proceed with drafting and publishing without my approval.” Client-facing service content may now be drafted and published autonomously. Preserve the approved site design. Keep proprietary methods, formulas, scripts, workflows, playbooks and company strategies private. Do not invent claims, credentials, client results or new commercial terms. This authorization does not grant account access, paid upgrades or outreach.
