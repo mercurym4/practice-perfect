@@ -1,5 +1,12 @@
+from pathlib import Path
+import sys
 import unittest
 
+HERE = Path(__file__).resolve().parent
+SCRIPTS = HERE.parent / "scripts"
+if not SCRIPTS.is_dir():
+    SCRIPTS = HERE
+sys.path.insert(0, str(SCRIPTS))
 from audit_live_site import PRIVATE_PATHS, Response, audit_live
 
 
