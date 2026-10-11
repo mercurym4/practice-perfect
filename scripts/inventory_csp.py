@@ -21,6 +21,7 @@ ALLOWED = {
     "frame-src": set(),
     "form-action": {"'self'"},
 }
+SERVER_ALLOWED = {"https://api.resend.com"}
 
 
 def token(url, page_url):
@@ -97,6 +98,7 @@ def inventory(root):
     origins = defaultdict(set)
     inline_script_hashes, inline_style_hashes = set(), set()
     errors, files = [], []
+    server_origins = set()
     style_attributes = 0
     event_handlers = Counter()
 
@@ -120,7 +122,12 @@ def inventory(root):
         if rel.parts and rel.parts[0] in PRIVATE_ROOTS:
             continue
         text = path.read_text(encoding="utf-8")
-        for value in re.findall(r"url\(\s*['\"]?([^'\")]+)", text, re.I):
+        for value in re.findall(r"@import\s+(?:url\(\s*)?['\"]([^'\"]+)", text, re.I):
+            found = token(value.strip(), BASE + "/" + rel.as_posix())
+            if found:
+                origins["style-src"].add(found)
+        asset_css = re.sub(r"@import\s+[^;]+;", "", text, flags=re.I)
+        for value in re.findall(r"url\(\s*['\"]?([^'\")]+)", asset_css, re.I):
             found = token(value.strip(), BASE + "/" + rel.as_posix())
             if found:
                 directive = "font-src" if re.search(r"\.(woff2?|ttf|otf)(?:[?#]|$)", value, re.I) else "img-src"
@@ -134,13 +141,18 @@ def inventory(root):
         for value in re.findall(r"(?:fetch|sendBeacon)\(\s*['\"]([^'\"]+)", text):
             found = token(value, BASE + "/" + rel.as_posix())
             if found:
-                origins["connect-src"].add(found)
+                if rel.parts and rel.parts[0] == "api":
+                    server_origins.add(found)
+                else:
+                    origins["connect-src"].add(found)
 
     for directive, values in origins.items():
         for value in sorted(values - ALLOWED.get(directive, set())):
             errors.append({"code": "unexpected-active-origin", "directive": directive, "value": value})
     for name, count in sorted(event_handlers.items()):
         errors.append({"code": "inline-event-handler", "name": name, "count": count})
+    for value in sorted(server_origins - SERVER_ALLOWED):
+        errors.append({"code": "unexpected-server-origin", "value": value})
 
     report_only = [
         "default-src 'self'", "base-uri 'self'", "object-src 'none'",
@@ -155,6 +167,7 @@ def inventory(root):
                    "inline_style_blocks": len(inline_style_hashes), "style_attributes": style_attributes,
                    "inline_event_handlers": sum(event_handlers.values())},
         "origins": {key: sorted(values) for key, values in sorted(origins.items())},
+        "server_connect_origins": sorted(server_origins),
         "inline_script_hashes": sorted(inline_script_hashes),
         "inline_style_hashes": sorted(inline_style_hashes),
         "proposed_report_only": "; ".join(report_only),

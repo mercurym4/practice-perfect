@@ -54,13 +54,17 @@ production's missing headers until publication is separately approved and verifi
 
 ## Content Security Policy inventory
 
-`scripts/inventory_csp.py` inventories active origins, inline executable scripts,
-inline style blocks/attributes, event-handler attributes, CSS URLs and same-origin
-fetch/beacon calls across the public source. Unexpected external active origins or
-inline event handlers fail the audit. The generated JSON includes SHA-256 hashes for
+`scripts/inventory_csp.py` inventories browser active origins, inline executable
+scripts, inline style blocks/attributes, event-handler attributes, CSS imports and
+URLs, and browser fetch/beacon calls across the public source. It inventories outbound
+calls from files under `api/` separately as server-only dependencies, because browser
+CSP cannot govern Vercel Function traffic. Unexpected browser origins, unexpected
+server origins, or inline event handlers fail the audit. The generated JSON includes
+SHA-256 hashes for
 each distinct inline executable script and style block plus a staged report-only
-policy. Three original fixture tests prove the detector accepts the expected
-same-origin/Google Fonts pattern and rejects a third-party script or inline handler.
+policy. Four fixture tests prove the detector accepts the expected
+same-origin/Google Fonts pattern, keeps the approved Resend API origin out of browser
+`connect-src`, and rejects a third-party script or inline handler.
 
 The proposed first-stage policy intentionally uses `unsafe-inline` for script/style
 and has no reporting endpoint. It is an inventory baseline, not an enforcing policy

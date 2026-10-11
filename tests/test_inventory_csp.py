@@ -49,6 +49,26 @@ class CspInventoryTest(unittest.TestCase):
         finally:
             temp.cleanup()
 
+    def test_css_import_and_server_function_are_classified_separately(self):
+        temp, root = self.site('<link rel="stylesheet" href="/styles.css">')
+        try:
+            (root / "styles.css").write_text(
+                '@import url("https://fonts.googleapis.com/css2?family=Inter");',
+                encoding="utf-8",
+            )
+            (root / "api").mkdir()
+            (root / "api" / "contact.js").write_text(
+                'fetch("https://api.resend.com/emails")', encoding="utf-8"
+            )
+            result = inventory(root)
+            self.assertTrue(result["ok"], result)
+            self.assertIn("https://fonts.googleapis.com", result["origins"]["style-src"])
+            self.assertNotIn("https://fonts.googleapis.com", result["origins"].get("img-src", []))
+            self.assertNotIn("https://api.resend.com", result["origins"].get("connect-src", []))
+            self.assertEqual(["https://api.resend.com"], result["server_connect_origins"])
+        finally:
+            temp.cleanup()
+
 
 if __name__ == "__main__":
     unittest.main()
