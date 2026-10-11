@@ -1,0 +1,26 @@
+name: Public site source audit
+
+'on':
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  source-audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Check out review source
+        # Official actions/checkout v4.2.2, immutable reviewed release commit.
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Verify checker detects defects
+        run: python3 -m unittest discover -s tests -p test_public_site_audit.py -v
+      - name: Audit the actual checkout
+        run: python3 scripts/audit_public_site.py .
+      - name: Verify live checker detects deployment defects
+        run: python3 -m unittest discover -s tests -p test_audit_live_site.py -v
+      - name: Audit the live canonical deployment (read-only)
+        run: python3 scripts/audit_live_site.py
