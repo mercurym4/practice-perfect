@@ -71,3 +71,29 @@ jobs:
           retention-days: 7
           name: practice-perfect-browser-gates
           path: ${{ runner.temp }}/browser-evidence
+
+  font-readiness:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out exact protected candidate
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+      - name: Install pinned browser tooling
+        run: |
+          npm install --no-save --ignore-scripts playwright@1.62.1
+          npx playwright install --with-deps chromium
+      - name: Verify actual reviewed Google Fonts readiness
+        env:
+          SOURCE_COMMIT: ${{ github.event.pull_request.head.sha }}
+          FONT_EVIDENCE_DIR: ${{ runner.temp }}/font-evidence
+        run: node tests/browser-font-readiness.cjs
+      - name: Preserve font readiness evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          retention-days: 7
+          name: practice-perfect-font-readiness
+          path: ${{ runner.temp }}/font-evidence
