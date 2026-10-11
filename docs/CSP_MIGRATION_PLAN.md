@@ -46,7 +46,7 @@ counts describe distinct fingerprints, not total occurrences. The 27 page-specif
 ## Ordered implementation
 
 1. **Implemented in the phase-1 candidate:** extracted only the shared mobile-menu script. All 27 pages reference the same synchronous same-origin asset at the former inline position; source and behavior tests require zero executable inline scripts, unchanged JSON-LD bodies, and preserved analytics/contact-form order.
-2. **Implemented in the phase-2 candidate:** replaced all four style attributes with three narrowly scoped rules. The Contact rule deliberately extends the existing branded eyebrow selector with `.contact-panel`; the originally proposed shorter selector would lose the current cascade. Rules remain unconditional across the required viewports.
+2. **Implemented in the phase-2 candidate:** replaced all four style attributes with three narrowly scoped rules. The Contact rule deliberately extends the existing branded eyebrow selector with `.contact-panel`; the originally proposed shorter selector would lose the current cascade. Source tests prove the exact former values are top-level, uniquely targeted and win the known cascade at every breakpoint. Browser-computed/pixel parity remains a pre-publication gate and is required before migrating larger visual style blocks.
 3. Move the small contact, audit-link, and service-anchor blocks into their existing
    stylesheets.
 4. Consolidate the shared header rules without changing the 640px breakpoint or
@@ -97,3 +97,4 @@ This plan does not authorize a redesign, copy/pricing changes, publication, CSP
 enforcement, telemetry collection, contact-form submission, or Vercel firewall-rule
 changes. It does not establish retained historical-deployment privacy, Search Console
 indexing, or conversion collection.
+
