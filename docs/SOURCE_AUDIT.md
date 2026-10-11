@@ -51,3 +51,27 @@ retains the branch deployment guard. CSP remains an explicit follow-on: inventor
 inline/external scripts and analytics first so a policy does not silently break the
 site. Because this branch cannot auto-deploy, the live audit will continue reporting
 production's missing headers until publication is separately approved and verified.
+
+## Content Security Policy inventory
+
+`scripts/inventory_csp.py` inventories active origins, inline executable scripts,
+inline style blocks/attributes, event-handler attributes, CSS URLs and same-origin
+fetch/beacon calls across the public source. Unexpected external active origins or
+inline event handlers fail the audit. The generated JSON includes SHA-256 hashes for
+each distinct inline executable script and style block plus a staged report-only
+policy. Three original fixture tests prove the detector accepts the expected
+same-origin/Google Fonts pattern and rejects a third-party script or inline handler.
+
+The proposed first-stage policy intentionally uses `unsafe-inline` for script/style
+and has no reporting endpoint. It is an inventory baseline, not an enforcing policy
+and not telemetry. The tightening path is: move repeated executable inline code to
+versioned local files, move inline style blocks/attributes into existing CSS, replace
+`unsafe-inline` with reviewed hashes or nonces, add an approved report destination,
+observe violations, then separately approve enforcement. Do not publish or enforce a
+CSP from this review branch.
+
+The draft `vercel.json` now carries that exact baseline as
+`Content-Security-Policy-Report-Only`, without `report-uri` or `report-to`.
+It cannot block resources and sends no violation data. Publication remains held;
+after an approved deployment, browser-console inspection is still required before
+adding telemetry or converting it to enforcing `Content-Security-Policy`.

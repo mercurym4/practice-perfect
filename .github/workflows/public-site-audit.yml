@@ -24,5 +24,9 @@ jobs:
         run: python3 -m unittest discover -s tests -p test_audit_live_site.py -v
       - name: Verify proposed deployment hardening
         run: python3 -m unittest discover -s tests -p test_vercel_security_headers.py -v
+      - name: Verify CSP inventory detects unsafe dependency drift
+        run: python3 -m unittest discover -s tests -p test_inventory_csp.py -v
+      - name: Inventory active-content dependencies
+        run: python3 scripts/inventory_csp.py .
       - name: Audit the live canonical deployment (read-only)
         run: python3 scripts/audit_live_site.py
