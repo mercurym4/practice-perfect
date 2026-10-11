@@ -2,13 +2,20 @@ from html.parser import HTMLParser
 from pathlib import Path
 import re
 import unittest
+from urllib.parse import urlparse
+import xml.etree.ElementTree as ET
 
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
 def public_pages():
-    return sorted(ROOT.glob("*.html")) + sorted((ROOT / "resources").glob("*.html")) + sorted((ROOT / "services").glob("*.html"))
+    sitemap = ET.parse(ROOT / "sitemap.xml")
+    pages = []
+    for loc in sitemap.findall("{http://www.sitemaps.org/schemas/sitemap/0.9}url/{http://www.sitemaps.org/schemas/sitemap/0.9}loc"):
+        route = urlparse(loc.text).path.strip("/")
+        pages.append(ROOT / (f"{route}.html" if route else "index.html"))
+    return pages
 
 
 class PageParser(HTMLParser):
