@@ -42,3 +42,12 @@ establishes only the live canonical responses observed during that run. It does 
 establish Vercel firewall rule state/log matches, historical-deployment privacy,
 Google Search Console indexing, visual acceptance, form delivery, or analytics event
 collection.
+
+The first live run found HSTS on all 27 pages but no Content-Security-Policy,
+X-Content-Type-Options, or Referrer-Policy headers. This draft proposes the two
+low-risk global headers `X-Content-Type-Options: nosniff` and
+`Referrer-Policy: strict-origin-when-cross-origin`, with a repository test that also
+retains the branch deployment guard. CSP remains an explicit follow-on: inventory
+inline/external scripts and analytics first so a policy does not silently break the
+site. Because this branch cannot auto-deploy, the live audit will continue reporting
+production's missing headers until publication is separately approved and verified.
