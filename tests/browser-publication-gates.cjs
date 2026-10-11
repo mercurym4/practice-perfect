@@ -61,7 +61,7 @@ async function serve(before) {
 async function snapshot(page, origin, target, width) {
   await page.setViewportSize({ width, height: 900 });
   await page.goto(`${origin}/${target.file}`, { waitUntil: 'networkidle' });
-  const element = page.locator(target.selector).first();
+  const element = page.locator(target.selector);
   assert.equal(await element.count(), 1);
   await element.scrollIntoViewIfNeeded();
   const computed = await element.evaluate(el => {
