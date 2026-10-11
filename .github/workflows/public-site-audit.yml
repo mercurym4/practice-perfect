@@ -32,6 +32,8 @@ jobs:
         run: python3 -m unittest discover -s tests -p test_image_dimensions.py -v
       - name: Verify public image loading priorities
         run: python3 -m unittest discover -s tests -p test_image_loading_priority.py -v
+      - name: Verify public font loading topology
+        run: python3 -m unittest discover -s tests -p test_font_loading.py -v
       - name: Verify live checker detects deployment defects
         run: python3 -m unittest discover -s tests -p test_audit_live_site.py -v
       - name: Verify proposed deployment hardening
