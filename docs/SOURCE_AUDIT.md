@@ -20,6 +20,25 @@ The tests generate a tiny original three-page website in a temporary directory. 
 
 The review script, self-contained tests and usage note may be moved to an isolated review branch. No main commit, deployment, or publication has been performed.
 
-## Review branch deployment guard
+## Live canonical audit
 
-The review branch `internal-website-source-audit` sets `git.deploymentEnabled` false for that exact branch in vercel.json before its first push. Other branches keep their existing deployment behavior. This prevents automatic Git-triggered deployment of this review branch per https://vercel.com/docs/project-configuration/git-configuration . Main merge and website publication remain separate approval gates; this branch must not be merged without that approval.
+`scripts/audit_live_site.py` performs read-only GET requests against the canonical
+production domain. It reads robots.txt and sitemap.xml, verifies every sitemap page
+returns indexable HTML with an exact self-canonical, and verifies seven known internal
+repository paths return 404 or 410. It inventories four browser security headers as
+warnings so missing coverage is visible without confusing hardening advice with an
+indexing/privacy failure. It never submits the contact form, changes configuration,
+writes files, or follows historical deployment URLs.
+
+Run the original four-case behavior suite and the live audit with:
+
+```sh
+python3 -m unittest discover -s tests -p test_audit_live_site.py -v
+python3 scripts/audit_live_site.py
+```
+
+The pull-request workflow runs both commands after the source audit. A passing result
+establishes only the live canonical responses observed during that run. It does not
+establish Vercel firewall rule state/log matches, historical-deployment privacy,
+Google Search Console indexing, visual acceptance, form delivery, or analytics event
+collection.
