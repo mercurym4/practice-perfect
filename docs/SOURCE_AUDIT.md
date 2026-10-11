@@ -71,6 +71,9 @@ script, style block or style attribute is grouped by SHA-256 fingerprint and lis
 its repository path, source line, byte length, and element name for attributes.
 Repeated fingerprints identify content that can move to one shared local asset;
 page-specific fingerprints must retain their existing scope and load order.
+`docs/CSP_MIGRATION_PLAN.md` turns that map into phased migration units and explicit
+behavior, cascade, responsive, JSON-LD, visual, and publication gates. It is a
+review specification, not authorization to implement or deploy the migration.
 
 The proposed first-stage policy intentionally uses `unsafe-inline` for script/style
 and has no reporting endpoint. It is an inventory baseline, not an enforcing policy
