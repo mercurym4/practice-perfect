@@ -70,8 +70,8 @@ layout, accessibility, source-audit, or live-audit regression.
 ## Acceptance evidence required
 
 - Source audit retains 27 pages, 668 internal links, 27 valid JSON-LD blocks, and
-  zero errors. The verified pre-migration baseline is 177 local assets; each new
-  extracted asset must resolve, and the expected count change must be documented.
+  zero errors. The verified pre-migration baseline is 177 local asset references;
+  phase 1 expects 204 (27 new page references to one new file), and the asset must resolve.
 - CSP inventory reports only expected same-origin/browser dependencies, the Resend
   origin remains server-only, and no inline event handlers appear.
 - Mobile navigation opens and closes on button press, navigation, Escape, and resize;
