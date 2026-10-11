@@ -74,3 +74,7 @@ body:not(.services-page) .custom-card{background:linear-gradient(135deg,var(--pp
 
 /* Custom line icons for feature cards */
 .feature-icon svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* Inline-style migration: exact unconditional presentation values. */
+.feature-grid--spaced{margin-top:18px}
+body:not(.services-page) .contact-panel .eyebrow{color:#9bd08d}

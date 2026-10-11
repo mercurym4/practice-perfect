@@ -1,6 +1,6 @@
 # CSP inline-dependency migration plan
 
-Status: phase 1 implementation candidate on the protected draft branch; no design, deployment, or publication change. Acceptance requires matching-head pull-request CI.
+Status: phases 1 and 2 implemented on the protected draft branch; no design, deployment, or publication change. Acceptance requires matching-head pull-request CI.
 
 Source baseline: reviewed phase-1 parent `69bbffe24654be37d3aa31d9b7b9909735c2dc24`.
 Exact-head evidence: use the pull-request workflow associated with the current branch head; do not count a superseded run.
@@ -14,11 +14,11 @@ has passed browser-console and visual comparison checks.
 
 ## Verified inventory
 
-The actual checkout contains:
+The reviewed pre-migration checkout contained:
 
-- 27 executable inline-script occurrences with one fingerprint;
+- 27 executable inline-script occurrences with one fingerprint (phase 1 now externalized);
 - 17 inline-style-block occurrences with 11 fingerprints;
-- four `style`-attribute occurrences with three fingerprints; and
+- four `style`-attribute occurrences with three fingerprints (phase 2 now class-based); and
 - zero inline event-handler attributes.
 
 The CI inventory emits every path, source line, byte count, element name for style
@@ -40,13 +40,13 @@ counts describe distinct fingerprints, not total occurrences. The 27 page-specif
 | Service anchor offsets | Two `#acquisition-scope`, two `#marketing-scope`, two `#website-scope`, one `#sprint-scope` blocks | 94px sticky-header anchor offset | `service-detail.css`, retaining the four distinct ID selectors |
 | Services page base | `services.html`, one 9,489-byte block | Entire Services layout, responsive rules, cards, process, CTA, footer, mobile navigation | New `/services-base.css` linked at the exact current block position before `services-reference.css` |
 | Feature-grid spacing | `our-system.html` and `what-we-fix.html`: `margin-top:18px` | Space after section heading | Add semantic `feature-grid--spaced` class and matching `enhancements.css` rule |
-| Contact eyebrow | `contact.html`: `color:#9bd08d` | Contrast over dark contact panel | `.contact-panel .eyebrow` in `enhancements.css` |
+| Contact eyebrow | `contact.html`: `color:#9bd08d` | Contrast over dark contact panel | `body:not(.services-page) .contact-panel .eyebrow` in `enhancements.css`; the extra existing scope is required to beat the branded eyebrow rule without `!important` |
 | Pricing intro margin | `pricing.html`: `margin:0` | Remove inherited heading margin | `.pricing-intro .section-heading` in `pricing-dashboard.css` |
 
 ## Ordered implementation
 
 1. **Implemented in the phase-1 candidate:** extracted only the shared mobile-menu script. All 27 pages reference the same synchronous same-origin asset at the former inline position; source and behavior tests require zero executable inline scripts, unchanged JSON-LD bodies, and preserved analytics/contact-form order.
-2. Replace the four style attributes with the three narrowly scoped rules above.
+2. **Implemented in the phase-2 candidate:** replaced all four style attributes with three narrowly scoped rules. The Contact rule deliberately extends the existing branded eyebrow selector with `.contact-panel`; the originally proposed shorter selector would lose the current cascade. Rules remain unconditional across the required viewports.
 3. Move the small contact, audit-link, and service-anchor blocks into their existing
    stylesheets.
 4. Consolidate the shared header rules without changing the 640px breakpoint or
