@@ -9,8 +9,8 @@ const root = path.resolve(__dirname, '..');
 const output = path.resolve(process.env.BROWSER_EVIDENCE_DIR || '/tmp/practice-perfect-browser-evidence');
 const widths = [320, 390, 640, 641, 650, 651, 768, 980, 981, 1440, 1700, 2560];
 const targets = [
-  { file: 'our-system.html', selector: '.feature-grid', style: 'margin-top:18px' },
-  { file: 'what-we-fix.html', selector: '.feature-grid', style: 'margin-top:18px' },
+  { file: 'our-system.html', selector: '.feature-grid--spaced', beforeSelector: '.feature-grid[style="margin-top:18px"]' },
+  { file: 'what-we-fix.html', selector: '.feature-grid--spaced', beforeSelector: '.feature-grid[style="margin-top:18px"]' },
   { file: 'contact.html', selector: '.contact-panel .eyebrow', style: 'color:#9bd08d' },
   { file: 'pricing.html', selector: '.pricing-intro .section-heading', style: 'margin:0' },
 ];
@@ -58,10 +58,10 @@ async function serve(before) {
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
   return { server, origin: `http://127.0.0.1:${server.address().port}` };
 }
-async function snapshot(page, origin, target, width) {
+async function snapshot(page, origin, target, width, before = false) {
   await page.setViewportSize({ width, height: 900 });
   await page.goto(`${origin}/${target.file}`, { waitUntil: 'networkidle' });
-  const element = page.locator(target.selector);
+  const element = page.locator(before && target.beforeSelector ? target.beforeSelector : target.selector);
   assert.equal(await element.count(), 1);
   await element.scrollIntoViewIfNeeded();
   const computed = await element.evaluate(el => {
@@ -95,7 +95,7 @@ async function main() {
     });
     const page = await context.newPage();
     for (const target of targets) for (const width of widths) {
-      const a = await snapshot(page, before.origin, target, width);
+      const a = await snapshot(page, before.origin, target, width, true);
       const b = await snapshot(page, after.origin, target, width);
       const key = `${target.file.replace('.html', '')}-${width}`;
       fs.writeFileSync(path.join(output, `${key}-before.png`), a.image);
