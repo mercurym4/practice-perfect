@@ -66,6 +66,12 @@ policy. Four fixture tests prove the detector accepts the expected
 same-origin/Google Fonts pattern, keeps the approved Resend API origin out of browser
 `connect-src`, and rejects a third-party script or inline handler.
 
+The `inline_occurrence_groups` output is the migration map: each distinct inline
+script, style block or style attribute is grouped by SHA-256 fingerprint and lists
+its repository path, source line, byte length, and element name for attributes.
+Repeated fingerprints identify content that can move to one shared local asset;
+page-specific fingerprints must retain their existing scope and load order.
+
 The proposed first-stage policy intentionally uses `unsafe-inline` for script/style
 and has no reporting endpoint. It is an inventory baseline, not an enforcing policy
 and not telemetry. The tightening path is: move repeated executable inline code to

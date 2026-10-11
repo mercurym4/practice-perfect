@@ -47,8 +47,9 @@ class InventoryParser(HTMLParser):
         self.page_url = page_url
         self.origins = defaultdict(set)
         self.inline_scripts, self.inline_styles = [], []
-        self.style_attributes, self.event_handlers = 0, []
+        self.style_attributes, self.event_handlers = [], []
         self._capture, self._buffer = None, []
+        self._capture_line = None
 
     def add(self, directive, value):
         value = token(value, self.page_url)
@@ -57,18 +58,21 @@ class InventoryParser(HTMLParser):
 
     def handle_starttag(self, tag, attrs):
         values = dict(attrs)
+        line, _ = self.getpos()
         for name, _ in attrs:
             if name.lower().startswith("on"):
                 self.event_handlers.append(name.lower())
         if "style" in values:
-            self.style_attributes += 1
+            self.style_attributes.append({"line": line, "tag": tag, "text": values["style"]})
         if tag == "script":
             if values.get("src"):
                 self.add("script-src", values["src"])
             elif values.get("type", "").lower() not in ("application/ld+json", "application/json"):
                 self._capture, self._buffer = "script", []
+                self._capture_line = line
         elif tag == "style":
             self._capture, self._buffer = "style", []
+            self._capture_line = line
         elif tag == "link" and "stylesheet" in values.get("rel", "").lower().split():
             self.add("style-src", values.get("href", ""))
         elif tag in ("img", "source"):
@@ -82,11 +86,13 @@ class InventoryParser(HTMLParser):
 
     def handle_endtag(self, tag):
         if self._capture == "script" and tag == "script":
-            self.inline_scripts.append("".join(self._buffer))
+            self.inline_scripts.append({"line": self._capture_line, "text": "".join(self._buffer)})
             self._capture, self._buffer = None, []
+            self._capture_line = None
         elif self._capture == "style" and tag == "style":
-            self.inline_styles.append("".join(self._buffer))
+            self.inline_styles.append({"line": self._capture_line, "text": "".join(self._buffer)})
             self._capture, self._buffer = None, []
+            self._capture_line = None
 
     def handle_data(self, data):
         if self._capture:
@@ -97,6 +103,7 @@ def inventory(root):
     root = Path(root).resolve()
     origins = defaultdict(set)
     inline_script_hashes, inline_style_hashes = set(), set()
+    inline_groups = defaultdict(list)
     errors, files = [], []
     server_origins = set()
     style_attributes = 0
@@ -112,9 +119,27 @@ def inventory(root):
         files.append(rel.as_posix())
         for directive, values in parser.origins.items():
             origins[directive].update(values)
-        inline_script_hashes.update(digest(value) for value in parser.inline_scripts if value.strip())
-        inline_style_hashes.update(digest(value) for value in parser.inline_styles if value.strip())
-        style_attributes += parser.style_attributes
+        for item in parser.inline_scripts:
+            if item["text"].strip():
+                fingerprint = digest(item["text"])
+                inline_script_hashes.add(fingerprint)
+                inline_groups[("script", fingerprint)].append(
+                    {"path": rel.as_posix(), "line": item["line"], "bytes": len(item["text"].encode("utf-8"))}
+                )
+        for item in parser.inline_styles:
+            if item["text"].strip():
+                fingerprint = digest(item["text"])
+                inline_style_hashes.add(fingerprint)
+                inline_groups[("style-block", fingerprint)].append(
+                    {"path": rel.as_posix(), "line": item["line"], "bytes": len(item["text"].encode("utf-8"))}
+                )
+        for item in parser.style_attributes:
+            fingerprint = digest(item["text"])
+            inline_groups[("style-attribute", fingerprint)].append(
+                {"path": rel.as_posix(), "line": item["line"], "tag": item["tag"],
+                 "bytes": len(item["text"].encode("utf-8"))}
+            )
+        style_attributes += len(parser.style_attributes)
         event_handlers.update(parser.event_handlers)
 
     for path in sorted(root.rglob("*.css")):
@@ -170,6 +195,11 @@ def inventory(root):
         "server_connect_origins": sorted(server_origins),
         "inline_script_hashes": sorted(inline_script_hashes),
         "inline_style_hashes": sorted(inline_style_hashes),
+        "inline_occurrence_groups": [
+            {"kind": kind, "hash": fingerprint, "occurrence_count": len(locations),
+             "locations": locations}
+            for (kind, fingerprint), locations in sorted(inline_groups.items())
+        ],
         "proposed_report_only": "; ".join(report_only),
         "errors": errors,
     }

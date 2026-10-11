@@ -69,6 +69,29 @@ class CspInventoryTest(unittest.TestCase):
         finally:
             temp.cleanup()
 
+    def test_inline_occurrences_include_locations_and_duplicate_groups(self):
+        temp, root = self.site('''<html><head>
+<style>.notice{color:red}</style>
+<script>document.body.dataset.ready="true"</script>
+</head><body><p style="font-weight:700">Ready</p></body></html>''')
+        try:
+            (root / "about.html").write_text(
+                '<style>.notice{color:red}</style><p style="font-weight:700">About</p>',
+                encoding="utf-8",
+            )
+            result = inventory(root)
+            groups = result["inline_occurrence_groups"]
+            style_block = next(group for group in groups if group["kind"] == "style-block")
+            style_attr = next(group for group in groups if group["kind"] == "style-attribute")
+            script = next(group for group in groups if group["kind"] == "script")
+            self.assertEqual(2, style_block["occurrence_count"])
+            self.assertEqual(["about.html", "index.html"], [item["path"] for item in style_block["locations"]])
+            self.assertEqual(2, style_attr["occurrence_count"])
+            self.assertEqual(3, script["locations"][0]["line"])
+            self.assertEqual("p", style_attr["locations"][0]["tag"])
+        finally:
+            temp.cleanup()
+
 
 if __name__ == "__main__":
     unittest.main()
