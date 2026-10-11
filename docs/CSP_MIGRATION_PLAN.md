@@ -1,9 +1,9 @@
 # CSP inline-dependency migration plan
 
-Status: review-only; no content, design, deployment, or publication change.
+Status: phase 1 implementation candidate on the protected draft branch; no design, deployment, or publication change. Acceptance requires matching-head pull-request CI.
 
-Source baseline: draft head `32115d24e5ab0b2fde7231992a0a182d806cffbe`.
-Exact-head evidence: https://github.com/mercurym4/practice-perfect/actions/runs/38125141388.
+Source baseline: reviewed phase-1 parent `69bbffe24654be37d3aa31d9b7b9909735c2dc24`.
+Exact-head evidence: use the pull-request workflow associated with the current branch head; do not count a superseded run.
 
 ## Objective
 
@@ -45,8 +45,7 @@ counts describe distinct fingerprints, not total occurrences. The 27 page-specif
 
 ## Ordered implementation
 
-1. Extract only the shared mobile-menu script. Verify all 27 pages still reference
-   one same-origin script and that no executable inline script remains.
+1. **Implemented in the phase-1 candidate:** extracted only the shared mobile-menu script. All 27 pages reference the same synchronous same-origin asset at the former inline position; source and behavior tests require zero executable inline scripts, unchanged JSON-LD bodies, and preserved analytics/contact-form order.
 2. Replace the four style attributes with the three narrowly scoped rules above.
 3. Move the small contact, audit-link, and service-anchor blocks into their existing
    stylesheets.
