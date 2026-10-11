@@ -1,7 +1,8 @@
 # Public image loading-priority audit
 
-Scope: the 27 public pages enumerated by `sitemap.xml` at protected draft head
-`5458131eaa6317fe76a7f12d7494336cd4bb57e1`.
+Scope: the 27 public pages enumerated by `sitemap.xml`. Baseline head:
+`5458131eaa6317fe76a7f12d7494336cd4bb57e1`; accepted implementation head:
+`06b6d5e2273a7da9dc115fe98065d7a94c411765`.
 
 ## Result
 
