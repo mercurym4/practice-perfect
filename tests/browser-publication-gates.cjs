@@ -17,7 +17,6 @@ const targets = [
   { key: 'contact-nextsteps', file: 'contact.html', selector: '.contact-page .contact-nextsteps' },
   { key: 'contact-chip', file: 'contact.html', selector: '.contact-nextsteps .hero-chip' },
   { key: 'audit-context-link', file: 'what-we-fix.html', selector: '.audit-context-link' },
-  { key: 'audit-context-focus', file: 'what-we-fix.html', selector: '.audit-context-link', focus: true },
   { key: 'direct-mail-anchor', file: 'services/debt-defense-direct-mail.html', selector: '#acquisition-scope' },
   { key: 'pi-anchor', file: 'services/pi-mva-lead-generation.html', selector: '#acquisition-scope' },
   { key: 'ppc-anchor', file: 'services/ppc-marketing.html', selector: '#marketing-scope' },
@@ -127,13 +126,6 @@ async function snapshot(page, origin, target, width, before = false) {
   const element = page.locator(before && target.beforeSelector ? target.beforeSelector : target.selector);
   assert.equal(await element.count(), 1);
   await element.scrollIntoViewIfNeeded();
-  if (target.focus) {
-    await element.focus();
-    await page.keyboard.press('Tab');
-    await page.keyboard.press('Shift+Tab');
-    assert.equal(await element.evaluate(el => document.activeElement === el), true);
-    assert.equal(await element.evaluate(el => el.matches(':focus-visible')), true);
-  }
   const computed = await element.evaluate(el => {
     const css = getComputedStyle(el);
     return { styles: Object.fromEntries([...css].map(key => [key, css.getPropertyValue(key)])),
@@ -148,7 +140,7 @@ async function main() {
   let browser;
   const results = { sourceCommit: process.env.SOURCE_COMMIT || null, scope: 'PP-WEB-14 and PP-WEB-22 migrated style targets; PP-WEB-15 keyboard; mobile navigation',
     limits: 'External fonts blocked for deterministic fallback-font parity. Does not establish deployed CSP, production fonts, image selection or full-page visual acceptance.',
-    styles: [], keyboard: [], navigation: [], localFailures: [] };
+    styles: [], focus: [], keyboard: [], navigation: [], localFailures: [] };
   try {
     browser = await chromium.launch({ headless: true });
     results.browser = browser.version();
@@ -173,6 +165,27 @@ async function main() {
       assert.deepEqual(b.computed, a.computed, `${key}: computed styles/geometry`);
       assert.equal(b.sha256, a.sha256, `${key}: target pixel parity`);
       results.styles.push({ file: target.file, selector: target.selector, width, screenshotSha256: b.sha256 });
+    }
+    for (const width of [390, 1280]) {
+      const focus = [];
+      for (const site of [before, after]) {
+        await page.setViewportSize({ width, height: 900 });
+        await page.goto(`${site.origin}/what-we-fix.html`, { waitUntil: 'networkidle' });
+        const link = page.locator('.audit-context-link');
+        await link.focus();
+        await page.keyboard.press('Tab');
+        await page.keyboard.press('Shift+Tab');
+        focus.push(await link.evaluate(el => {
+          const css = getComputedStyle(el);
+          return { active: document.activeElement === el, visible: el.matches(':focus-visible'),
+            outlineColor: css.outlineColor, outlineStyle: css.outlineStyle,
+            outlineWidth: css.outlineWidth, outlineOffset: css.outlineOffset };
+        }));
+      }
+      assert.deepEqual(focus[1], focus[0], `audit focus ${width}: before/after`);
+      assert.deepEqual(focus[1], { active: true, visible: true, outlineColor: 'rgb(20, 119, 255)',
+        outlineStyle: 'solid', outlineWidth: '3px', outlineOffset: '4px' });
+      results.focus.push({ file: 'what-we-fix.html', selector: '.audit-context-link:focus-visible', width, computed: focus[1] });
     }
     const sitemap = fs.readFileSync(path.join(root, 'sitemap.xml'), 'utf8');
     const routes = [...sitemap.matchAll(/<loc>(.*?)<\/loc>/g)].map(m => new URL(m[1]).pathname);
@@ -203,7 +216,7 @@ async function main() {
     }
     assert.deepEqual(results.localFailures, [], 'required local assets must load');
     results.passed = true;
-    console.log(`PASS: ${results.styles.length} computed/pixel comparisons; ${results.keyboard.length} keyboard checks; ${results.navigation.length} menu checks.`);
+    console.log(`PASS: ${results.styles.length} computed/pixel comparisons; ${results.focus.length} focus comparisons; ${results.keyboard.length} keyboard checks; ${results.navigation.length} menu checks.`);
   } finally {
     fs.writeFileSync(path.join(output, 'results.json'), JSON.stringify(results, null, 2));
     if (browser) await browser.close();

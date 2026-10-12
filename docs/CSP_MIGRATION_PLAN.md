@@ -52,7 +52,8 @@ counts describe distinct fingerprints, not total occurrences. The 27 page-specif
    into `service-detail.css`. Exact selectors, values, the 980px Contact breakpoint,
    the audit-link focus treatment, and each 94px anchor offset are retained. Source
    normalization proves only the nine reviewed blocks left HTML; the local browser
-   gate reconstructs those blocks and compares all affected targets at 12 widths.
+   gate reconstructs those blocks, compares all affected visual targets at 12 widths,
+   and separately verifies the exact focused-link outline at mobile and desktop widths.
 4. Consolidate the shared header rules without changing the 640px breakpoint or
    their cascade position; then move the About and Pricing additions.
 5. Move `#growth-operating-flow` only after capturing narrow, tablet, and desktop
