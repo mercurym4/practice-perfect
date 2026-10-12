@@ -25,7 +25,9 @@ jobs:
           python3 -m unittest discover -s tests -p test_mobile_menu_extraction.py -v
           node tests/mobile-menu.test.cjs
       - name: Verify inline-style migration contract
-        run: python3 -m unittest discover -s tests -p test_inline_style_migration.py -v
+        run: |
+          python3 -m unittest discover -s tests -p test_inline_style_migration.py -v
+          python3 -m unittest discover -s tests -p test_csp_phase3_style_blocks.py -v
       - name: Verify accessibility landmarks and skip navigation
         run: python3 -m unittest discover -s tests -p test_accessibility_landmarks.py -v
       - name: Verify public image intrinsic dimensions

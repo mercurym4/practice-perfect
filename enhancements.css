@@ -78,3 +78,15 @@ body:not(.services-page) .custom-card{background:linear-gradient(135deg,var(--pp
 /* Inline-style migration: exact unconditional presentation values. */
 .feature-grid--spaced{margin-top:18px}
 body:not(.services-page) .contact-panel .eyebrow{color:#9bd08d}
+
+/* CSP phase 3: exact Contact and audit-link rules moved from page blocks. */
+.contact-page .subhero-grid{min-height:0}
+.contact-page .contact-nextsteps{min-height:0;margin:0;overflow:visible}
+.contact-nextsteps .hero-chip{position:static;max-width:none}
+.audit-context-link{display:inline-block;margin-top:12px;color:#0d2b55;font-size:13px;font-weight:700;line-height:1.5;text-decoration:underline;text-underline-offset:3px}
+.audit-context-link:focus-visible{outline:3px solid #1477ff;outline-offset:4px}
+@media(max-width:980px){
+.contact-page .subhero-grid{gap:24px}
+.contact-page .subhero-copy{padding:36px 0 0}
+.contact-page .contact-nextsteps{margin-bottom:32px}
+}

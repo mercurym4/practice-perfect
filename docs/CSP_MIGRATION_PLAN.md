@@ -1,6 +1,6 @@
 # CSP inline-dependency migration plan
 
-Status: phases 1 and 2 implemented on the protected draft branch; no design, deployment, or publication change. Acceptance requires matching-head pull-request CI.
+Status: phases 1 through 3 implemented on the protected draft branch; no design, deployment, or publication change. Acceptance requires matching-head pull-request CI.
 
 Source baseline: reviewed phase-1 parent `69bbffe24654be37d3aa31d9b7b9909735c2dc24`.
 Exact-head evidence: use the pull-request workflow associated with the current branch head; do not count a superseded run.
@@ -47,8 +47,12 @@ counts describe distinct fingerprints, not total occurrences. The 27 page-specif
 
 1. **Implemented in the phase-1 candidate:** extracted only the shared mobile-menu script. All 27 pages reference the same synchronous same-origin asset at the former inline position; source and behavior tests require zero executable inline scripts, unchanged JSON-LD bodies, and preserved analytics/contact-form order.
 2. **Implemented in the phase-2 candidate:** replaced all four style attributes with three narrowly scoped rules. The Contact rule deliberately extends the existing branded eyebrow selector with `.contact-panel`; the originally proposed shorter selector would lose the current cascade. Source tests prove the exact former values are top-level, uniquely targeted and win the known cascade at every breakpoint. Browser-computed/pixel parity remains a pre-publication gate and is required before migrating larger visual style blocks.
-3. Move the small contact, audit-link, and service-anchor blocks into their existing
-   stylesheets.
+3. **Implemented in the phase-3 candidate:** moved the small Contact and audit-link
+   blocks into `enhancements.css`, and all seven service-page anchor-offset blocks
+   into `service-detail.css`. Exact selectors, values, the 980px Contact breakpoint,
+   the audit-link focus treatment, and each 94px anchor offset are retained. Source
+   normalization proves only the nine reviewed blocks left HTML; the local browser
+   gate reconstructs those blocks and compares all affected targets at 12 widths.
 4. Consolidate the shared header rules without changing the 640px breakpoint or
    their cascade position; then move the About and Pricing additions.
 5. Move `#growth-operating-flow` only after capturing narrow, tablet, and desktop
