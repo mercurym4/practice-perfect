@@ -39,6 +39,7 @@ STARTING_BLOBS = {
     "services/website-audit-overhaul.html": "c1a1bd7d6d4b324790eb6a31d7f6930bffb51ea3",
     "services/website-design.html": "95c239e72ff7d40707cbe65ebadd87034dfa103b",
 }
+HEADER_BLOCK = '<style id="pp-logo-match-services">.header .brand{display:flex;align-items:center;flex:0 0 auto}.header .brand img{width:176px!important;height:auto!important;max-width:none!important;display:block!important}@media(max-width:640px){.header .brand img{width:145px!important}}</style>'
 
 
 def git_blob_sha(text):
@@ -50,11 +51,16 @@ class CspPhase3StyleBlockTest(unittest.TestCase):
     def test_only_the_nine_reviewed_html_blocks_were_removed(self):
         restored = {}
         contact = (ROOT / "contact.html").read_text(encoding="utf-8")
+        stylesheet = '<link rel="stylesheet" href="enhancements.css">'
+        self.assertEqual(1, contact.count(stylesheet))
+        contact = contact.replace(stylesheet, stylesheet + HEADER_BLOCK)
         anchor = '<link rel="canonical" href="https://practiceperfect.us/contact">'
         self.assertEqual(1, contact.count(anchor))
         restored["contact.html"] = contact.replace(anchor, anchor + CONTACT_BLOCK)
 
         audit = (ROOT / "what-we-fix.html").read_text(encoding="utf-8")
+        self.assertEqual(1, audit.count(stylesheet))
+        audit = audit.replace(stylesheet, stylesheet + HEADER_BLOCK)
         anchor = '<meta property="og:type" content="website">'
         self.assertEqual(1, audit.count(anchor))
         restored["what-we-fix.html"] = audit.replace(anchor, AUDIT_BLOCK + anchor)
@@ -115,14 +121,14 @@ class CspPhase3StyleBlockTest(unittest.TestCase):
             self.assertLess(html.index('href="/styles.css"'), html.index('href="/enhancements.css"'))
             self.assertLess(html.index('href="/enhancements.css"'), html.index('href="/service-detail.css"'))
 
-    def test_csp_inventory_reduces_only_the_expected_inline_style_groups(self):
+    def test_phase3_targets_stay_absent_after_the_phase4_migration(self):
         result = inventory(ROOT)
         self.assertTrue(result["ok"], result)
-        self.assertEqual(5, result["counts"]["inline_style_blocks"])
+        self.assertEqual(2, result["counts"]["inline_style_blocks"])
         self.assertEqual(0, result["counts"]["inline_script_blocks"])
         self.assertEqual(0, result["counts"]["style_attributes"])
         self.assertEqual(0, result["counts"]["inline_event_handlers"])
-        self.assertEqual(8, sum(
+        self.assertEqual(2, sum(
             group["occurrence_count"] for group in result["inline_occurrence_groups"]
             if group["kind"] == "style-block"
         ))
@@ -133,8 +139,7 @@ class CspPhase3StyleBlockTest(unittest.TestCase):
             for item in group["locations"]
         ]
         self.assertEqual(
-            ["about.html", "contact.html", "index.html", "our-system.html", "our-system.html",
-             "pricing.html", "services.html", "what-we-fix.html"],
+            ["our-system.html", "services.html"],
             sorted(remaining_paths),
         )
         self.assertTrue(set(SERVICE_BLOCKS).isdisjoint(remaining_paths))

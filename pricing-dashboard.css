@@ -7,3 +7,9 @@
 
 /* Inline-style migration: preserve the pricing intro's zero margin. */
 .pricing-intro .section-heading{margin:0}
+
+/* CSP phase 4: exact Pricing hero rules moved from the page block. */
+.pricing-hero-visual{position:relative;min-height:500px;overflow:hidden}
+.pricing-hero-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:block}
+.pricing-hero-visual:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(241,247,242,.32),rgba(13,43,85,.04))}
+.pricing-hero-visual .hero-chip{z-index:2}

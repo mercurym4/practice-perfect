@@ -90,3 +90,10 @@ body:not(.services-page) .contact-panel .eyebrow{color:#9bd08d}
 .contact-page .subhero-copy{padding:36px 0 0}
 .contact-page .contact-nextsteps{margin-bottom:32px}
 }
+
+/* CSP phase 4: shared header scale and About visual rules moved from page blocks. */
+.header .brand{display:flex;align-items:center;flex:0 0 auto}
+.header .brand img{width:176px!important;height:auto!important;max-width:none!important;display:block!important}
+@media(max-width:640px){.header .brand img{width:145px!important}}
+.about-dashboard-image-wrap{min-height:0!important;background:transparent!important;box-shadow:0 16px 42px rgba(13,43,85,.12)}
+.about-dashboard-image-wrap img{display:block;width:100%;height:auto;object-fit:contain}

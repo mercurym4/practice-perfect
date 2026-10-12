@@ -24,6 +24,17 @@ const targets = [
   { key: 'seo-anchor', file: 'services/seo-marketing.html', selector: '#marketing-scope' },
   { key: 'website-audit-anchor', file: 'services/website-audit-overhaul.html', selector: '#website-scope' },
   { key: 'website-design-anchor', file: 'services/website-design.html', selector: '#website-scope' },
+  { key: 'index-header-logo', file: 'index.html', selector: '.header .brand img' },
+  { key: 'contact-header-logo', file: 'contact.html', selector: '.header .brand img' },
+  { key: 'system-header-logo', file: 'our-system.html', selector: '.header .brand img' },
+  { key: 'fix-header-logo', file: 'what-we-fix.html', selector: '.header .brand img' },
+  { key: 'about-header-logo', file: 'about.html', selector: '.header .brand img' },
+  { key: 'pricing-header-logo', file: 'pricing.html', selector: '.header .brand img' },
+  { key: 'about-dashboard', file: 'about.html', selector: '.about-dashboard-image-wrap' },
+  { key: 'about-dashboard-image', file: 'about.html', selector: '.about-dashboard-image-wrap img' },
+  { key: 'pricing-current-visual', file: 'pricing.html', selector: '.subhero-visual' },
+  { key: 'pricing-current-image', file: 'pricing.html', selector: '.page-hero-photo img' },
+  { key: 'pricing-current-chip', file: 'pricing.html', selector: '.subhero-visual .hero-chip' },
 ];
 const rules = {
   'enhancements.css': [
@@ -37,8 +48,19 @@ const rules = {
     '.contact-page .subhero-grid{gap:24px}',
     '.contact-page .subhero-copy{padding:36px 0 0}',
     '.contact-page .contact-nextsteps{margin-bottom:32px}',
+    '.header .brand{display:flex;align-items:center;flex:0 0 auto}',
+    '.header .brand img{width:176px!important;height:auto!important;max-width:none!important;display:block!important}',
+    '@media(max-width:640px){.header .brand img{width:145px!important}}',
+    '.about-dashboard-image-wrap{min-height:0!important;background:transparent!important;box-shadow:0 16px 42px rgba(13,43,85,.12)}',
+    '.about-dashboard-image-wrap img{display:block;width:100%;height:auto;object-fit:contain}',
   ],
-  'pricing-dashboard.css': ['.pricing-intro .section-heading{margin:0}'],
+  'pricing-dashboard.css': [
+    '.pricing-intro .section-heading{margin:0}',
+    '.pricing-hero-visual{position:relative;min-height:500px;overflow:hidden}',
+    '.pricing-hero-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:block}',
+    '.pricing-hero-visual:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(241,247,242,.32),rgba(13,43,85,.04))}',
+    '.pricing-hero-visual .hero-chip{z-index:2}',
+  ],
   'service-detail.css': [
     '#acquisition-scope{scroll-margin-top:94px}',
     '#marketing-scope{scroll-margin-top:94px}',
@@ -66,6 +88,9 @@ const serviceBlocks = {
   'services/website-audit-overhaul.html': '<style>#website-scope{scroll-margin-top:94px}</style>',
   'services/website-design.html': '<style>#website-scope{scroll-margin-top:94px}</style>',
 };
+const headerRules = '.header .brand{display:flex;align-items:center;flex:0 0 auto}.header .brand img{width:176px!important;height:auto!important;max-width:none!important;display:block!important}@media(max-width:640px){.header .brand img{width:145px!important}}';
+const aboutRules = '.about-dashboard-image-wrap{min-height:0!important;background:transparent!important;box-shadow:0 16px 42px rgba(13,43,85,.12)}.about-dashboard-image-wrap img{display:block;width:100%;height:auto;object-fit:contain}';
+const pricingRules = '.pricing-hero-visual{position:relative;min-height:500px;overflow:hidden}.pricing-hero-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:block}.pricing-hero-visual:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(241,247,242,.32),rgba(13,43,85,.04))}.pricing-hero-visual .hero-chip{z-index:2}';
 function beforeSource(file, text) {
   for (const rule of rules[file] || []) {
     assert.equal(text.split(rule).length - 1, 1, `baseline rule: ${file}`);
@@ -98,6 +123,21 @@ function beforeSource(file, text) {
   if (serviceBlocks[file]) {
     assert.equal(text.split('</head>').length - 1, 1);
     text = text.replace('</head>', serviceBlocks[file] + '</head>');
+  }
+  if (['index.html', 'contact.html', 'our-system.html', 'what-we-fix.html'].includes(file)) {
+    const mark = '<link rel="stylesheet" href="enhancements.css">';
+    assert.equal(text.split(mark).length - 1, 1);
+    text = text.replace(mark, mark + `<style id="pp-logo-match-services">${headerRules}</style>`);
+  }
+  if (file === 'about.html') {
+    const mark = '<link rel="stylesheet" href="enhancements.css">';
+    assert.equal(text.split(mark).length - 1, 1);
+    text = text.replace(mark, mark + `<style id="pp-logo-match-services">${headerRules}${aboutRules}</style>`);
+  }
+  if (file === 'pricing.html') {
+    const mark = '<link rel="stylesheet" href="pricing-dashboard.css">';
+    assert.equal(text.split(mark).length - 1, 1);
+    text = text.replace(mark, mark + `<style id="pp-logo-match-services">${headerRules}${pricingRules}</style>`);
   }
   return text;
 }
@@ -138,7 +178,7 @@ async function main() {
   fs.mkdirSync(output, { recursive: true });
   const before = await serve(true), after = await serve(false);
   let browser;
-  const results = { sourceCommit: process.env.SOURCE_COMMIT || null, scope: 'PP-WEB-14 and PP-WEB-22 migrated style targets; PP-WEB-15 keyboard; mobile navigation',
+  const results = { sourceCommit: process.env.SOURCE_COMMIT || null, scope: 'PP-WEB-14, PP-WEB-22 and PP-WEB-23 migrated style targets; PP-WEB-15 keyboard; mobile navigation',
     limits: 'External fonts blocked for deterministic fallback-font parity. Does not establish deployed CSP, production fonts, image selection or full-page visual acceptance.',
     styles: [], focus: [], keyboard: [], navigation: [], localFailures: [] };
   try {

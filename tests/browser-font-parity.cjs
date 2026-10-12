@@ -13,11 +13,39 @@ const targets = [
   { file: 'what-we-fix.html', selector: '.feature-grid--spaced', beforeSelector: '.feature-grid[style="margin-top:18px"]' },
   { file: 'contact.html', selector: '.contact-panel .eyebrow', style: 'color:#9bd08d' },
   { file: 'pricing.html', selector: '.pricing-intro .section-heading', style: 'margin:0' },
+  { key: 'index-header-logo', file: 'index.html', selector: '.header .brand img' },
+  { key: 'contact-header-logo', file: 'contact.html', selector: '.header .brand img' },
+  { key: 'system-header-logo', file: 'our-system.html', selector: '.header .brand img' },
+  { key: 'fix-header-logo', file: 'what-we-fix.html', selector: '.header .brand img' },
+  { key: 'about-header-logo', file: 'about.html', selector: '.header .brand img' },
+  { key: 'pricing-header-logo', file: 'pricing.html', selector: '.header .brand img' },
+  { key: 'about-dashboard', file: 'about.html', selector: '.about-dashboard-image-wrap' },
+  { key: 'about-dashboard-image', file: 'about.html', selector: '.about-dashboard-image-wrap img' },
+  { key: 'pricing-current-visual', file: 'pricing.html', selector: '.subhero-visual' },
+  { key: 'pricing-current-image', file: 'pricing.html', selector: '.page-hero-photo img' },
+  { key: 'pricing-current-chip', file: 'pricing.html', selector: '.subhero-visual .hero-chip' },
 ];
 const rules = {
-  'enhancements.css': ['.feature-grid--spaced{margin-top:18px}', 'body:not(.services-page) .contact-panel .eyebrow{color:#9bd08d}'],
-  'pricing-dashboard.css': ['.pricing-intro .section-heading{margin:0}'],
+  'enhancements.css': [
+    '.feature-grid--spaced{margin-top:18px}',
+    'body:not(.services-page) .contact-panel .eyebrow{color:#9bd08d}',
+    '.header .brand{display:flex;align-items:center;flex:0 0 auto}',
+    '.header .brand img{width:176px!important;height:auto!important;max-width:none!important;display:block!important}',
+    '@media(max-width:640px){.header .brand img{width:145px!important}}',
+    '.about-dashboard-image-wrap{min-height:0!important;background:transparent!important;box-shadow:0 16px 42px rgba(13,43,85,.12)}',
+    '.about-dashboard-image-wrap img{display:block;width:100%;height:auto;object-fit:contain}',
+  ],
+  'pricing-dashboard.css': [
+    '.pricing-intro .section-heading{margin:0}',
+    '.pricing-hero-visual{position:relative;min-height:500px;overflow:hidden}',
+    '.pricing-hero-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:block}',
+    '.pricing-hero-visual:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(241,247,242,.32),rgba(13,43,85,.04))}',
+    '.pricing-hero-visual .hero-chip{z-index:2}',
+  ],
 };
+const headerRules = '.header .brand{display:flex;align-items:center;flex:0 0 auto}.header .brand img{width:176px!important;height:auto!important;max-width:none!important;display:block!important}@media(max-width:640px){.header .brand img{width:145px!important}}';
+const aboutRules = '.about-dashboard-image-wrap{min-height:0!important;background:transparent!important;box-shadow:0 16px 42px rgba(13,43,85,.12)}.about-dashboard-image-wrap img{display:block;width:100%;height:auto;object-fit:contain}';
+const pricingRules = '.pricing-hero-visual{position:relative;min-height:500px;overflow:hidden}.pricing-hero-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:block}.pricing-hero-visual:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(241,247,242,.32),rgba(13,43,85,.04))}.pricing-hero-visual .hero-chip{z-index:2}';
 function beforeSource(file, text) {
   for (const rule of rules[file] || []) {
     assert.equal(text.split(rule).length - 1, 1, `baseline rule: ${file}`);
@@ -36,6 +64,21 @@ function beforeSource(file, text) {
     const mark = '<div class="pricing-intro"><div class="section-heading">';
     assert.equal(text.split(mark).length - 1, 1);
     text = text.replace(mark, '<div class="pricing-intro"><div class="section-heading" style="margin:0">');
+  }
+  if (['index.html', 'contact.html', 'our-system.html', 'what-we-fix.html'].includes(file)) {
+    const mark = '<link rel="stylesheet" href="enhancements.css">';
+    assert.equal(text.split(mark).length - 1, 1);
+    text = text.replace(mark, mark + `<style id="pp-logo-match-services">${headerRules}</style>`);
+  }
+  if (file === 'about.html') {
+    const mark = '<link rel="stylesheet" href="enhancements.css">';
+    assert.equal(text.split(mark).length - 1, 1);
+    text = text.replace(mark, mark + `<style id="pp-logo-match-services">${headerRules}${aboutRules}</style>`);
+  }
+  if (file === 'pricing.html') {
+    const mark = '<link rel="stylesheet" href="pricing-dashboard.css">';
+    assert.equal(text.split(mark).length - 1, 1);
+    text = text.replace(mark, mark + `<style id="pp-logo-match-services">${headerRules}${pricingRules}</style>`);
   }
   return text;
 }
@@ -101,8 +144,8 @@ async function main() {
   fs.mkdirSync(output, { recursive: true });
   const before = await serve(true), after = await serve(false);
   let browser;
-  const results = { sourceCommit: process.env.SOURCE_COMMIT || null, scope: 'PP-WEB-14 four migrated style targets with actual reviewed Google Fonts',
-    limits: 'Actual requested normal Latin font readiness and scoped target parity in Chromium. Baseline restores only four inline declarations; it retains current font topology and all other changes. Does not establish older-site or whole-page font parity, image selection, deployed CSP or performance.',
+  const results = { sourceCommit: process.env.SOURCE_COMMIT || null, scope: 'PP-WEB-14 and PP-WEB-23 migrated style targets with actual reviewed Google Fonts',
+    limits: 'Actual requested normal Latin font readiness and scoped target parity in Chromium. Baseline restores only the reviewed phase-2 and phase-4 rules; it retains current font topology and all other changes. Does not establish older-site or whole-page font parity, deployed CSP or performance.',
     styles: [], fontReadiness: [], externalResponses: [], blockedExternal: [], requestFailures: [], localFailures: [] };
   try {
     browser = await chromium.launch({ headless: true });
@@ -134,7 +177,7 @@ async function main() {
     for (const target of targets) for (const width of widths) {
       const a = await snapshot(page, before.origin, target, width, true);
       const b = await snapshot(page, after.origin, target, width);
-      const key = `${target.file.replace('.html', '')}-${width}`;
+      const key = `${target.key || target.file.replace('.html', '')}-${width}`;
       fs.writeFileSync(path.join(output, `${key}-before.png`), a.image);
       fs.writeFileSync(path.join(output, `${key}-after.png`), b.image);
       assert.deepEqual(b.computed, a.computed, `${key}: computed styles/geometry`);
@@ -142,8 +185,8 @@ async function main() {
       results.fontReadiness.push({ file: target.file, width, before: a.fontFaces, after: b.fontFaces });
       results.styles.push({ file: target.file, selector: target.selector, width, screenshotSha256: b.sha256 });
     }
-    assert.equal(results.styles.length, 48);
-    assert.equal(results.fontReadiness.length, 48);
+    assert.equal(results.styles.length, targets.length * widths.length);
+    assert.equal(results.fontReadiness.length, targets.length * widths.length);
     assert.deepEqual(results.blockedExternal, [], 'unexpected external dependency');
     assert.deepEqual(results.requestFailures, [], 'required requests succeeded');
     assert.ok(results.externalResponses.some(item => item.type === 'stylesheet' && item.status === 200), 'Google CSS received');

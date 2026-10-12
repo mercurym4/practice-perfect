@@ -1,6 +1,6 @@
 # CSP inline-dependency migration plan
 
-Status: phases 1 through 3 implemented on the protected draft branch; no design, deployment, or publication change. Acceptance requires matching-head pull-request CI.
+Status: phases 1 through 4 implemented on the protected draft branch; no design, deployment, or publication change. Acceptance requires matching-head pull-request CI.
 
 Source baseline: reviewed phase-1 parent `69bbffe24654be37d3aa31d9b7b9909735c2dc24`.
 Exact-head evidence: use the pull-request workflow associated with the current branch head; do not count a superseded run.
@@ -54,8 +54,13 @@ counts describe distinct fingerprints, not total occurrences. The 27 page-specif
    normalization proves only the nine reviewed blocks left HTML; the local browser
    gate reconstructs those blocks, compares all affected visual targets at 12 widths,
    and separately verifies the exact focused-link outline at mobile and desktop widths.
-4. Consolidate the shared header rules without changing the 640px breakpoint or
-   their cascade position; then move the About and Pricing additions.
+4. **Implemented in the phase-4 candidate:** consolidated the shared header rules
+   in `enhancements.css` without changing their exact declarations or 640px
+   breakpoint, then moved only the reviewed About additions to `enhancements.css`
+   and Pricing additions to `pricing-dashboard.css`. Source reconstruction proves
+   only the six reviewed blocks left HTML; browser evidence compares the shared
+   header plus About and Pricing targets across all 12 widths, including the
+   pricing page where `pricing-dashboard.css` remains after `enhancements.css`.
 5. Move `#growth-operating-flow` only after capturing narrow, tablet, and desktop
    baselines.
 6. Extract the Services base block last, preserving its order before
