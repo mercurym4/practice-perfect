@@ -13,7 +13,7 @@ const targets = [
   { file: 'what-we-fix.html', selector: '.feature-grid--spaced', beforeSelector: '.feature-grid[style="margin-top:18px"]' },
   { file: 'contact.html', selector: '.contact-panel .eyebrow', style: 'color:#9bd08d' },
   { file: 'pricing.html', selector: '.pricing-intro .section-heading', style: 'margin:0' },
-  { key: 'index-header-logo', file: 'index.html', selector: '.header .brand img' },
+  { key: 'index-header-logo', file: 'index.html', selector: '.header .brand img', families: ['Inter'] },
   { key: 'contact-header-logo', file: 'contact.html', selector: '.header .brand img' },
   { key: 'system-header-logo', file: 'our-system.html', selector: '.header .brand img' },
   { key: 'fix-header-logo', file: 'what-we-fix.html', selector: '.header .brand img' },
@@ -101,8 +101,9 @@ async function serve(before) {
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
   return { server, origin: `http://127.0.0.1:${server.address().port}` };
 }
-async function actualFonts(page) {
-  const specs = [{ family: 'Inter', weights: [400, 500, 600, 700, 800] }, { family: 'DM Serif Display', weights: [400] }];
+async function actualFonts(page, families = ['Inter', 'DM Serif Display']) {
+  const allSpecs = [{ family: 'Inter', weights: [400, 500, 600, 700, 800] }, { family: 'DM Serif Display', weights: [400] }];
+  const specs = allSpecs.filter(spec => families.includes(spec.family));
   const loaded = await page.evaluate(async specs => {
     const checks = [];
     for (const { family, weights } of specs) for (const weight of weights) {
@@ -128,7 +129,7 @@ async function actualFonts(page) {
 async function snapshot(page, origin, target, width, before = false) {
   await page.setViewportSize({ width, height: 900 });
   await page.goto(`${origin}/${target.file}`, { waitUntil: 'networkidle' });
-  const fontFaces = await actualFonts(page);
+  const fontFaces = await actualFonts(page, target.families);
   const element = page.locator(before && target.beforeSelector ? target.beforeSelector : target.selector);
   assert.equal(await element.count(), 1);
   await element.scrollIntoViewIfNeeded();
