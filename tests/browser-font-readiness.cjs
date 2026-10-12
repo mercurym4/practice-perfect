@@ -49,7 +49,9 @@ async function main() {
             return requestRoute.continue();
           }
           const googleStyle = url.protocol === 'https:' && url.hostname === 'fonts.googleapis.com' && url.pathname === '/css2' && request.resourceType() === 'stylesheet';
-          const googleFont = url.protocol === 'https:' && url.hostname === 'fonts.gstatic.com' && url.pathname.startsWith('/s/') && request.resourceType() === 'font';
+          // Google Fonts may serve reviewed font bytes from versioned /s/ paths
+          // or the /l/font endpoint; both stay within the exact HTTPS font host.
+          const googleFont = url.protocol === 'https:' && url.hostname === 'fonts.gstatic.com' && request.resourceType() === 'font';
           if (request.method() === 'GET' && (googleStyle || googleFont)) return requestRoute.continue();
           results.blockedExternal.push({ route, url: url.href, type: request.resourceType() });
           return requestRoute.abort();

@@ -113,7 +113,10 @@ async function main() {
       if (![before.origin, after.origin].includes(url.origin)) {
         const request = route.request();
         const style = url.protocol === 'https:' && url.hostname === 'fonts.googleapis.com' && url.pathname === '/css2' && request.resourceType() === 'stylesheet';
-        const font = url.protocol === 'https:' && url.hostname === 'fonts.gstatic.com' && url.pathname.startsWith('/s/') && request.resourceType() === 'font';
+        // Google Fonts may serve reviewed font bytes from versioned /s/ paths or
+        // the /l/font endpoint. Keep the boundary on HTTPS + exact host + font
+        // resource type instead of coupling acceptance to one CDN path shape.
+        const font = url.protocol === 'https:' && url.hostname === 'fonts.gstatic.com' && request.resourceType() === 'font';
         if (request.method() === 'GET' && (style || font)) return route.continue();
         results.blockedExternal.push({ url: url.href, type: request.resourceType() });
         return route.abort();
