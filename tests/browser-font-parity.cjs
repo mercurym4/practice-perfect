@@ -14,16 +14,9 @@ const targets = [
   { file: 'contact.html', selector: '.contact-panel .eyebrow', style: 'color:#9bd08d' },
   { file: 'pricing.html', selector: '.pricing-intro .section-heading', style: 'margin:0' },
   { key: 'index-header-logo', file: 'index.html', selector: '.header .brand img', families: ['Inter'] },
-  { key: 'contact-header-logo', file: 'contact.html', selector: '.header .brand img' },
-  { key: 'system-header-logo', file: 'our-system.html', selector: '.header .brand img' },
-  { key: 'fix-header-logo', file: 'what-we-fix.html', selector: '.header .brand img' },
-  { key: 'about-header-logo', file: 'about.html', selector: '.header .brand img' },
   { key: 'pricing-header-logo', file: 'pricing.html', selector: '.header .brand img' },
   { key: 'about-dashboard', file: 'about.html', selector: '.about-dashboard-image-wrap' },
-  { key: 'about-dashboard-image', file: 'about.html', selector: '.about-dashboard-image-wrap img' },
   { key: 'pricing-current-visual', file: 'pricing.html', selector: '.subhero-visual' },
-  { key: 'pricing-current-image', file: 'pricing.html', selector: '.page-hero-photo img' },
-  { key: 'pricing-current-chip', file: 'pricing.html', selector: '.subhero-visual .hero-chip' },
 ];
 const rules = {
   'enhancements.css': [

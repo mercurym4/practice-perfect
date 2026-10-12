@@ -31,10 +31,7 @@ const targets = [
   { key: 'about-header-logo', file: 'about.html', selector: '.header .brand img' },
   { key: 'pricing-header-logo', file: 'pricing.html', selector: '.header .brand img' },
   { key: 'about-dashboard', file: 'about.html', selector: '.about-dashboard-image-wrap' },
-  { key: 'about-dashboard-image', file: 'about.html', selector: '.about-dashboard-image-wrap img' },
   { key: 'pricing-current-visual', file: 'pricing.html', selector: '.subhero-visual' },
-  { key: 'pricing-current-image', file: 'pricing.html', selector: '.page-hero-photo img' },
-  { key: 'pricing-current-chip', file: 'pricing.html', selector: '.subhero-visual .hero-chip' },
 ];
 const rules = {
   'enhancements.css': [
