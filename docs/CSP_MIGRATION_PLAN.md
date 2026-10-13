@@ -1,6 +1,6 @@
 # CSP inline-dependency migration plan
 
-Status: phases 1 through 4 implemented on the protected draft branch; no design, deployment, or publication change. Acceptance requires matching-head pull-request CI.
+Status: phases 1 through 5 implemented on the protected draft branch; no design, deployment, or publication change. Acceptance requires matching-head pull-request CI.
 
 Source baseline: reviewed phase-1 parent `69bbffe24654be37d3aa31d9b7b9909735c2dc24`.
 Exact-head evidence: use the pull-request workflow associated with the current branch head; do not count a superseded run.
@@ -61,8 +61,10 @@ counts describe distinct fingerprints, not total occurrences. The 27 page-specif
    only the six reviewed blocks left HTML; browser evidence compares the shared
    header plus About and Pricing targets across all 12 widths, including the
    pricing page where `pricing-dashboard.css` remains after `enhancements.css`.
-5. Move `#growth-operating-flow` only after capturing narrow, tablet, and desktop
-   baselines.
+5. **Implemented in the phase-5 candidate:** moved the exact
+   `#growth-operating-flow` block to `enhancements.css` after adding source
+   reconstruction plus computed-style and pixel-parity coverage at all 12 review
+   widths. The 980px and 650px boundaries and stylesheet order are unchanged.
 6. Extract the Services base block last, preserving its order before
    `services-reference.css`.
 7. Treat the 27 inline JSON-LD data blocks as a separate CSP dependency. The current
