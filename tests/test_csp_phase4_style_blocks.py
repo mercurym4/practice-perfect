@@ -147,10 +147,10 @@ class CspPhase4StyleBlockTest(unittest.TestCase):
         self.assertIn("@media(max-width:640px){.header .brand img{width:145px!important}}", enhancements)
         self.assertNotIn("@media(max-width:650px){.header .brand img", enhancements)
 
-    def test_inventory_reduces_to_only_the_deferred_phase6_block(self):
+    def test_inventory_remains_zero_after_phase6(self):
         result = inventory(ROOT)
         self.assertTrue(result["ok"], result)
-        self.assertEqual(1, result["counts"]["inline_style_blocks"])
+        self.assertEqual(0, result["counts"]["inline_style_blocks"])
         self.assertEqual(0, result["counts"]["inline_script_blocks"])
         self.assertEqual(0, result["counts"]["style_attributes"])
         self.assertEqual(0, result["counts"]["inline_event_handlers"])
@@ -160,7 +160,7 @@ class CspPhase4StyleBlockTest(unittest.TestCase):
             if group["kind"] == "style-block"
             for item in group["locations"]
         )
-        self.assertEqual(["services.html"], remaining_paths)
+        self.assertEqual([], remaining_paths)
 
 
 if __name__ == "__main__":

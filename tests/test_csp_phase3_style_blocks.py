@@ -124,11 +124,11 @@ class CspPhase3StyleBlockTest(unittest.TestCase):
     def test_phase3_targets_stay_absent_after_later_migrations(self):
         result = inventory(ROOT)
         self.assertTrue(result["ok"], result)
-        self.assertEqual(1, result["counts"]["inline_style_blocks"])
+        self.assertEqual(0, result["counts"]["inline_style_blocks"])
         self.assertEqual(0, result["counts"]["inline_script_blocks"])
         self.assertEqual(0, result["counts"]["style_attributes"])
         self.assertEqual(0, result["counts"]["inline_event_handlers"])
-        self.assertEqual(1, sum(
+        self.assertEqual(0, sum(
             group["occurrence_count"] for group in result["inline_occurrence_groups"]
             if group["kind"] == "style-block"
         ))
@@ -138,10 +138,7 @@ class CspPhase3StyleBlockTest(unittest.TestCase):
             if group["kind"] == "style-block"
             for item in group["locations"]
         ]
-        self.assertEqual(
-            ["services.html"],
-            sorted(remaining_paths),
-        )
+        self.assertEqual([], sorted(remaining_paths))
         self.assertTrue(set(SERVICE_BLOCKS).isdisjoint(remaining_paths))
         self.assertEqual(["'self'", "https://fonts.googleapis.com"], result["origins"]["style-src"])
         self.assertEqual(["https://api.resend.com"], result["server_connect_origins"])

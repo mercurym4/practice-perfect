@@ -1,6 +1,6 @@
 # CSP inline-dependency migration plan
 
-Status: phases 1 through 5 implemented on the protected draft branch; no design, deployment, or publication change. Acceptance requires matching-head pull-request CI.
+Status: phases 1 through 6 implemented on the protected draft branch; no design, deployment, or publication change. Acceptance requires matching-head pull-request CI.
 
 Source baseline: reviewed phase-1 parent `69bbffe24654be37d3aa31d9b7b9909735c2dc24`.
 Exact-head evidence: use the pull-request workflow associated with the current branch head; do not count a superseded run.
@@ -38,7 +38,7 @@ counts describe distinct fingerprints, not total occurrences. The 27 page-specif
 | Operating-flow styles | `our-system.html` second block | Full responsive presentation of `#growth-operating-flow` | Page-scoped section in `enhancements.css`; migrate only with viewport parity evidence |
 | Audit-link styles | `what-we-fix.html` second block | Link appearance and keyboard focus | `enhancements.css`; move base and `:focus-visible` rules together |
 | Service anchor offsets | Two `#acquisition-scope`, two `#marketing-scope`, two `#website-scope`, one `#sprint-scope` blocks | 94px sticky-header anchor offset | `service-detail.css`, retaining the four distinct ID selectors |
-| Services page base | `services.html`, one 9,489-byte block | Entire Services layout, responsive rules, cards, process, CTA, footer, mobile navigation | New `/services-base.css` linked at the exact current block position before `services-reference.css` |
+| Services page base | Formerly `services.html`, one 9,489-byte block | Entire Services layout, responsive rules, cards, process, CTA, footer, mobile navigation | Exact block prepended to the existing `/services-reference.css`; its former inline position already precedes the approved scoped overrides and this stylesheet has one HTML consumer |
 | Feature-grid spacing | `our-system.html` and `what-we-fix.html`: `margin-top:18px` | Space after section heading | Add semantic `feature-grid--spaced` class and matching `enhancements.css` rule |
 | Contact eyebrow | `contact.html`: `color:#9bd08d` | Contrast over dark contact panel | `body:not(.services-page) .contact-panel .eyebrow` in `enhancements.css`; the extra existing scope is required to beat the branded eyebrow rule without `!important` |
 | Pricing intro margin | `pricing.html`: `margin:0` | Remove inherited heading margin | `.pricing-intro .section-heading` in `pricing-dashboard.css` |
@@ -65,15 +65,21 @@ counts describe distinct fingerprints, not total occurrences. The 27 page-specif
    `#growth-operating-flow` block to `enhancements.css` after adding source
    reconstruction plus computed-style and pixel-parity coverage at all 12 review
    widths. The 980px and 650px boundaries and stylesheet order are unchanged.
-6. Extract the Services base block last, preserving its order before
-   `services-reference.css`.
+6. **Implemented in the phase-6 candidate:** moved the exact 9,489-byte Services
+   block to the beginning of the existing `services-reference.css`. The former
+   stylesheet link remains in the exact head position, so the extracted base rules
+   still precede the approved `.services-reference` overrides. Source reconstruction
+   verifies the two starting blobs; fallback-font and actual-font browser gates restore
+   the former inline source and compare Services targets at all 12 widths. Five full-page
+   comparisons cover the 640/641, 980/981 and 1700 transition boundaries.
 7. Treat the 27 inline JSON-LD data blocks as a separate CSP dependency. The current
    executable inventory intentionally excludes them, so zero executable blocks alone
    does not authorize removing `'unsafe-inline'` from `script-src`. Under report-only,
    verify target-browser behavior and retain `'unsafe-inline'` or add exact reviewed
    hashes/nonces until all JSON-LD remains available without violations.
-8. Remove `'unsafe-inline'` from `style-src` only after the inventory reports zero
-   style blocks and zero style attributes. Keep the policy report-only pending
+8. The phase-6 source inventory now reports zero style blocks and zero style
+   attributes. Removing `'unsafe-inline'` from the report-only `style-src` remains a
+   separate reviewable configuration change; keep the policy report-only pending
    approved live validation.
 
 Each phase is a separate reviewable commit. Stop at the first behavior, computed-style,
@@ -81,9 +87,8 @@ layout, accessibility, source-audit, or live-audit regression.
 
 ## Acceptance evidence required
 
-- Source audit retains 27 pages, 668 internal links, 27 valid JSON-LD blocks, and
-  zero errors. The verified pre-migration baseline is 177 local asset references;
-  phase 1 expects 204 (27 new page references to one new file), and the asset must resolve.
+- Source audit retains 27 pages, 695 internal links, 204 local asset references,
+  27 valid JSON-LD blocks and zero errors. Phase 6 adds no asset path or link.
 - CSP inventory reports only expected same-origin/browser dependencies, the Resend
   origin remains server-only, and no inline event handlers appear.
 - Mobile navigation opens and closes on button press, navigation, Escape, and resize;

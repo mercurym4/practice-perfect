@@ -68,20 +68,14 @@ class CspPhase5StyleBlockTest(unittest.TestCase):
         self.assertIn("@media(max-width:650px){#growth-operating-flow", enhancements)
         self.assertNotIn("@media(max-width:640px){#growth-operating-flow", enhancements)
 
-    def test_inventory_reduces_to_the_services_block_only(self):
+    def test_inventory_has_no_inline_style_dependencies_after_phase_6(self):
         result = inventory(ROOT)
         self.assertTrue(result["ok"], result)
-        self.assertEqual(1, result["counts"]["inline_style_blocks"])
+        self.assertEqual(0, result["counts"]["inline_style_blocks"])
         self.assertEqual(0, result["counts"]["inline_script_blocks"])
         self.assertEqual(0, result["counts"]["style_attributes"])
         self.assertEqual(0, result["counts"]["inline_event_handlers"])
-        remaining_paths = sorted(
-            item["path"]
-            for group in result["inline_occurrence_groups"]
-            if group["kind"] == "style-block"
-            for item in group["locations"]
-        )
-        self.assertEqual(["services.html"], remaining_paths)
+        self.assertEqual([], result["inline_occurrence_groups"])
 
 
 if __name__ == "__main__":

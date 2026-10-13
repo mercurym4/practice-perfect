@@ -8,6 +8,12 @@ const { chromium } = require('playwright');
 const root = path.resolve(__dirname, '..');
 const output = path.resolve(process.env.FONT_PARITY_EVIDENCE_DIR || '/tmp/practice-perfect-font-parity-evidence');
 const widths = [320, 390, 640, 641, 650, 651, 768, 980, 981, 1440, 1700, 2560];
+const servicesStyleBytes = 9489;
+const servicesCandidateBytes = fs.readFileSync(path.join(root, 'services-reference.css'));
+const servicesBlock = servicesCandidateBytes.subarray(0, servicesStyleBytes).toString('utf8');
+const servicesReferenceBefore = servicesCandidateBytes.subarray(servicesStyleBytes).toString('utf8').replace(/^\n/, '');
+assert.equal(Buffer.byteLength(servicesBlock), servicesStyleBytes);
+assert.equal(`${servicesBlock}\n${servicesReferenceBefore}`, servicesCandidateBytes.toString('utf8'));
 const targets = [
   { file: 'our-system.html', selector: '.feature-grid--spaced', beforeSelector: '.feature-grid[style="margin-top:18px"]' },
   { file: 'what-we-fix.html', selector: '.feature-grid--spaced', beforeSelector: '.feature-grid[style="margin-top:18px"]' },
@@ -18,6 +24,10 @@ const targets = [
   { key: 'about-dashboard', file: 'about.html', selector: '.about-dashboard-image-wrap' },
   { key: 'pricing-current-visual', file: 'pricing.html', selector: '.subhero-visual' },
   { key: 'system-operating-flow', file: 'our-system.html', selector: '#growth-operating-flow' },
+  { key: 'services-hero', file: 'services.html', selector: '.hero-grid', families: ['Inter'] },
+  { key: 'services-first-card', file: 'services.html', selector: '.service-card:first-child', families: ['Inter'] },
+  { key: 'services-partner', file: 'services.html', selector: '.partner-panel', families: ['Inter'] },
+  { key: 'services-process', file: 'services.html', selector: '.process-grid', families: ['Inter'] },
 ];
 const rules = {
   'enhancements.css': [
@@ -65,6 +75,15 @@ const operatingFlowRules = `<style id="pp-operating-flow-polish">
 @media(max-width:650px){#growth-operating-flow{grid-template-columns:1fr;padding:18px;gap:14px}#growth-operating-flow .system-node{padding:20px}#growth-operating-flow .system-node-top{margin-bottom:14px}}
 </style>`;
 function beforeSource(file, text) {
+  if (file === 'services.html') {
+    const mark = '<link rel="stylesheet" href="/services-reference.css">';
+    assert.equal(text.split(mark).length - 1, 1);
+    text = text.replace(mark, `<style>${servicesBlock}</style>${mark}`);
+  }
+  if (file === 'services-reference.css') {
+    assert.equal(text, servicesCandidateBytes.toString('utf8'));
+    text = servicesReferenceBefore;
+  }
   for (const rule of rules[file] || []) {
     const expected = rule === '#growth-operating-flow .system-arrow{display:none}' ? 2 : 1;
     assert.equal(text.split(rule).length - 1, expected, `baseline rule: ${file}`);
@@ -169,8 +188,8 @@ async function main() {
   fs.mkdirSync(output, { recursive: true });
   const before = await serve(true), after = await serve(false);
   let browser;
-  const results = { sourceCommit: process.env.SOURCE_COMMIT || null, scope: 'PP-WEB-14, PP-WEB-23 and PP-WEB-24 migrated style targets with actual reviewed Google Fonts',
-    limits: 'Actual requested normal Latin font readiness and scoped target parity in Chromium. Baseline restores only the reviewed phase-2, phase-4 and phase-5 rules; it retains current font topology and all other changes. Does not establish older-site or whole-page font parity, deployed CSP or performance.',
+  const results = { sourceCommit: process.env.SOURCE_COMMIT || null, scope: 'PP-WEB-14 and PP-WEB-23 through PP-WEB-25 migrated style targets with actual reviewed Google Fonts',
+    limits: 'Actual requested normal Latin font readiness and scoped target parity in Chromium. Baseline restores only the reviewed phase-2 and phase-4 through phase-6 rules; it retains current font topology and all other changes. Does not establish older-site or whole-page font parity, deployed CSP or performance.',
     styles: [], fontReadiness: [], externalResponses: [], blockedExternal: [], requestFailures: [], localFailures: [] };
   try {
     browser = await chromium.launch({ headless: true });
@@ -218,7 +237,7 @@ async function main() {
     assert.ok(results.externalResponses.some(item => item.type === 'font' && item.status === 200), 'font bytes received');
     assert.deepEqual(results.localFailures, [], 'required local assets must load');
     results.passed = true;
-    console.log(`PASS: ${results.styles.length} actual-font computed/pixel comparisons; 96 before/after page readiness sets.`);
+    console.log(`PASS: ${results.styles.length} actual-font computed/pixel comparisons; ${results.fontReadiness.length} before/after target readiness sets.`);
   } finally {
     fs.writeFileSync(path.join(output, 'font-parity-results.json'), JSON.stringify(results, null, 2));
     if (browser) await browser.close();

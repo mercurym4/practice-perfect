@@ -8,6 +8,12 @@ const { chromium } = require('playwright');
 const root = path.resolve(__dirname, '..');
 const output = path.resolve(process.env.BROWSER_EVIDENCE_DIR || '/tmp/practice-perfect-browser-evidence');
 const widths = [320, 390, 640, 641, 650, 651, 768, 980, 981, 1440, 1700, 2560];
+const servicesStyleBytes = 9489;
+const servicesCandidateBytes = fs.readFileSync(path.join(root, 'services-reference.css'));
+const servicesBlock = servicesCandidateBytes.subarray(0, servicesStyleBytes).toString('utf8');
+const servicesReferenceBefore = servicesCandidateBytes.subarray(servicesStyleBytes).toString('utf8').replace(/^\n/, '');
+assert.equal(Buffer.byteLength(servicesBlock), servicesStyleBytes);
+assert.equal(`${servicesBlock}\n${servicesReferenceBefore}`, servicesCandidateBytes.toString('utf8'));
 const targets = [
   { file: 'our-system.html', selector: '.feature-grid--spaced', beforeSelector: '.feature-grid[style="margin-top:18px"]' },
   { file: 'what-we-fix.html', selector: '.feature-grid--spaced', beforeSelector: '.feature-grid[style="margin-top:18px"]' },
@@ -33,6 +39,15 @@ const targets = [
   { key: 'about-dashboard', file: 'about.html', selector: '.about-dashboard-image-wrap' },
   { key: 'pricing-current-visual', file: 'pricing.html', selector: '.subhero-visual' },
   { key: 'system-operating-flow', file: 'our-system.html', selector: '#growth-operating-flow' },
+  { key: 'services-nav', file: 'services.html', selector: '.header .nav' },
+  { key: 'services-hero', file: 'services.html', selector: '.hero-grid' },
+  { key: 'services-hero-media', file: 'services.html', selector: '.hero-media img' },
+  { key: 'services-grid', file: 'services.html', selector: '.services-grid' },
+  { key: 'services-first-card', file: 'services.html', selector: '.service-card:first-child' },
+  { key: 'services-partner', file: 'services.html', selector: '.partner-panel' },
+  { key: 'services-process', file: 'services.html', selector: '.process-grid' },
+  { key: 'services-cta', file: 'services.html', selector: '.cta-row' },
+  { key: 'services-footer', file: 'services.html', selector: '.footer' },
 ];
 const rules = {
   'enhancements.css': [
@@ -114,6 +129,15 @@ const operatingFlowRules = `<style id="pp-operating-flow-polish">
 @media(max-width:650px){#growth-operating-flow{grid-template-columns:1fr;padding:18px;gap:14px}#growth-operating-flow .system-node{padding:20px}#growth-operating-flow .system-node-top{margin-bottom:14px}}
 </style>`;
 function beforeSource(file, text) {
+  if (file === 'services.html') {
+    const mark = '<link rel="stylesheet" href="/services-reference.css">';
+    assert.equal(text.split(mark).length - 1, 1);
+    text = text.replace(mark, `<style>${servicesBlock}</style>${mark}`);
+  }
+  if (file === 'services-reference.css') {
+    assert.equal(text, servicesCandidateBytes.toString('utf8'));
+    text = servicesReferenceBefore;
+  }
   for (const rule of rules[file] || []) {
     const expected = rule === '#growth-operating-flow .system-arrow{display:none}' ? 2 : 1;
     assert.equal(text.split(rule).length - 1, expected, `baseline rule: ${file}`);
@@ -206,9 +230,9 @@ async function main() {
   fs.mkdirSync(output, { recursive: true });
   const before = await serve(true), after = await serve(false);
   let browser;
-  const results = { sourceCommit: process.env.SOURCE_COMMIT || null, scope: 'PP-WEB-14, PP-WEB-22, PP-WEB-23 and PP-WEB-24 migrated style targets; PP-WEB-15 keyboard; mobile navigation',
-    limits: 'External fonts blocked for deterministic fallback-font parity. Does not establish deployed CSP, production fonts, image selection or full-page visual acceptance.',
-    styles: [], focus: [], keyboard: [], navigation: [], localFailures: [] };
+  const results = { sourceCommit: process.env.SOURCE_COMMIT || null, scope: 'PP-WEB-14, PP-WEB-22 through PP-WEB-25 migrated style targets; PP-WEB-15 keyboard; mobile navigation',
+    limits: 'External fonts blocked for deterministic fallback-font parity. Services full-page parity covers five transition widths only. Does not establish deployed CSP, production fonts, image selection or whole-site full-page visual acceptance.',
+    styles: [], fullPage: [], print: [], focus: [], keyboard: [], navigation: [], localFailures: [] };
   try {
     browser = await chromium.launch({ headless: true });
     results.browser = browser.version();
@@ -234,6 +258,32 @@ async function main() {
       assert.equal(b.sha256, a.sha256, `${key}: target pixel parity`);
       results.styles.push({ file: target.file, selector: target.selector, width, screenshotSha256: b.sha256 });
     }
+    for (const width of [640, 641, 980, 981, 1700]) {
+      const captures = [];
+      for (const site of [before, after]) {
+        await page.setViewportSize({ width, height: 900 });
+        await page.goto(`${site.origin}/services.html`, { waitUntil: 'networkidle' });
+        const image = await page.screenshot({ fullPage: true, animations: 'disabled' });
+        captures.push({ image, sha256: crypto.createHash('sha256').update(image).digest('hex') });
+      }
+      fs.writeFileSync(path.join(output, `services-full-${width}-before.png`), captures[0].image);
+      fs.writeFileSync(path.join(output, `services-full-${width}-after.png`), captures[1].image);
+      assert.equal(captures[1].sha256, captures[0].sha256, `services full-page ${width}: pixel parity`);
+      results.fullPage.push({ file: 'services.html', width, screenshotSha256: captures[1].sha256 });
+    }
+    await page.emulateMedia({ media: 'print' });
+    const printCaptures = [];
+    for (const site of [before, after]) {
+      await page.setViewportSize({ width: 1280, height: 900 });
+      await page.goto(`${site.origin}/services.html`, { waitUntil: 'networkidle' });
+      const image = await page.screenshot({ fullPage: true, animations: 'disabled' });
+      printCaptures.push({ image, sha256: crypto.createHash('sha256').update(image).digest('hex') });
+    }
+    fs.writeFileSync(path.join(output, 'services-print-before.png'), printCaptures[0].image);
+    fs.writeFileSync(path.join(output, 'services-print-after.png'), printCaptures[1].image);
+    assert.equal(printCaptures[1].sha256, printCaptures[0].sha256, 'services print: pixel parity');
+    results.print.push({ file: 'services.html', width: 1280, screenshotSha256: printCaptures[1].sha256 });
+    await page.emulateMedia({ media: 'screen' });
     for (const width of [390, 1280]) {
       const focus = [];
       for (const site of [before, after]) {
@@ -284,7 +334,7 @@ async function main() {
     }
     assert.deepEqual(results.localFailures, [], 'required local assets must load');
     results.passed = true;
-    console.log(`PASS: ${results.styles.length} computed/pixel comparisons; ${results.focus.length} focus comparisons; ${results.keyboard.length} keyboard checks; ${results.navigation.length} menu checks.`);
+    console.log(`PASS: ${results.styles.length} computed/pixel comparisons; ${results.fullPage.length} Services full-page comparisons; ${results.print.length} print comparison; ${results.focus.length} focus comparisons; ${results.keyboard.length} keyboard checks; ${results.navigation.length} menu checks.`);
   } finally {
     fs.writeFileSync(path.join(output, 'results.json'), JSON.stringify(results, null, 2));
     if (browser) await browser.close();
