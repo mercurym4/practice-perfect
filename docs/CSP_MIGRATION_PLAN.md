@@ -1,6 +1,6 @@
 # CSP inline-dependency migration plan
 
-Status: phases 1 through 6 implemented on the protected draft branch; no design, deployment, or publication change. Acceptance requires matching-head pull-request CI.
+Status: phases 1 through 7 implemented on the protected draft branch; no design, deployment, or publication change. Acceptance requires matching-head pull-request CI.
 
 Source baseline: reviewed phase-1 parent `69bbffe24654be37d3aa31d9b7b9909735c2dc24`.
 Exact-head evidence: use the pull-request workflow associated with the current branch head; do not count a superseded run.
@@ -77,10 +77,13 @@ counts describe distinct fingerprints, not total occurrences. The 27 page-specif
    does not authorize removing `'unsafe-inline'` from `script-src`. Under report-only,
    verify target-browser behavior and retain `'unsafe-inline'` or add exact reviewed
    hashes/nonces until all JSON-LD remains available without violations.
-8. The phase-6 source inventory now reports zero style blocks and zero style
-   attributes. Removing `'unsafe-inline'` from the report-only `style-src` remains a
-   separate reviewable configuration change; keep the policy report-only pending
-   approved live validation.
+8. **Implemented in the phase-7 candidate:** the phase-6 source inventory reports
+   zero style blocks and zero style attributes, and the three public runtime scripts
+   do not create style attributes or `<style>` elements. The non-enforcing policy
+   therefore removes only `'unsafe-inline'` from `style-src`, while retaining
+   same-origin CSS and Google Fonts CSS. `script-src 'unsafe-inline'` remains unchanged
+   for the separately reviewed JSON-LD dependency. The policy remains report-only,
+   has no reporting endpoint, and still requires approved live console validation.
 
 Each phase is a separate reviewable commit. Stop at the first behavior, computed-style,
 layout, accessibility, source-audit, or live-audit regression.

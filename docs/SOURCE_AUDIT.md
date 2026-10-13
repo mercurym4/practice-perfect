@@ -75,13 +75,14 @@ page-specific fingerprints must retain their existing scope and load order.
 behavior, cascade, responsive, JSON-LD, visual, and publication gates. It is a
 review specification, not authorization to implement or deploy the migration.
 
-The proposed first-stage policy intentionally uses `unsafe-inline` for script/style
-and has no reporting endpoint. It is an inventory baseline, not an enforcing policy
-and not telemetry. The tightening path is: move repeated executable inline code to
-versioned local files, move inline style blocks/attributes into existing CSS, replace
-`unsafe-inline` with reviewed hashes or nonces, add an approved report destination,
-observe violations, then separately approve enforcement. Do not publish or enforce a
-CSP from this review branch.
+The protected draft now has zero executable inline scripts, style blocks, style
+attributes, and inline event handlers across the 27 public pages. Its three public
+runtime scripts also do not create style attributes or `<style>` elements. The
+report-only policy therefore removes `unsafe-inline` from `style-src` while retaining
+same-origin and Google Fonts styles. `script-src 'unsafe-inline'` remains deliberately
+unchanged because the 27 inline JSON-LD data blocks are a separately reviewed CSP
+dependency. The policy has no reporting endpoint, is not enforcing, and is not
+telemetry. Do not publish or enforce CSP from this review branch.
 
 The draft `vercel.json` now carries that exact baseline as
 `Content-Security-Policy-Report-Only`, without `report-uri` or `report-to`.
