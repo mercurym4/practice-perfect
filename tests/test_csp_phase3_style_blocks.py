@@ -121,14 +121,14 @@ class CspPhase3StyleBlockTest(unittest.TestCase):
             self.assertLess(html.index('href="/styles.css"'), html.index('href="/enhancements.css"'))
             self.assertLess(html.index('href="/enhancements.css"'), html.index('href="/service-detail.css"'))
 
-    def test_phase3_targets_stay_absent_after_the_phase4_migration(self):
+    def test_phase3_targets_stay_absent_after_later_migrations(self):
         result = inventory(ROOT)
         self.assertTrue(result["ok"], result)
-        self.assertEqual(2, result["counts"]["inline_style_blocks"])
+        self.assertEqual(1, result["counts"]["inline_style_blocks"])
         self.assertEqual(0, result["counts"]["inline_script_blocks"])
         self.assertEqual(0, result["counts"]["style_attributes"])
         self.assertEqual(0, result["counts"]["inline_event_handlers"])
-        self.assertEqual(2, sum(
+        self.assertEqual(1, sum(
             group["occurrence_count"] for group in result["inline_occurrence_groups"]
             if group["kind"] == "style-block"
         ))
@@ -139,7 +139,7 @@ class CspPhase3StyleBlockTest(unittest.TestCase):
             for item in group["locations"]
         ]
         self.assertEqual(
-            ["our-system.html", "services.html"],
+            ["services.html"],
             sorted(remaining_paths),
         )
         self.assertTrue(set(SERVICE_BLOCKS).isdisjoint(remaining_paths))
