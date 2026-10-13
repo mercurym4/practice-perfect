@@ -17,6 +17,7 @@ const targets = [
   { key: 'pricing-header-logo', file: 'pricing.html', selector: '.header .brand img' },
   { key: 'about-dashboard', file: 'about.html', selector: '.about-dashboard-image-wrap' },
   { key: 'pricing-current-visual', file: 'pricing.html', selector: '.subhero-visual' },
+  { key: 'system-operating-flow', file: 'our-system.html', selector: '#growth-operating-flow' },
 ];
 const rules = {
   'enhancements.css': [
@@ -27,6 +28,17 @@ const rules = {
     '@media(max-width:640px){.header .brand img{width:145px!important}}',
     '.about-dashboard-image-wrap{min-height:0!important;background:transparent!important;box-shadow:0 16px 42px rgba(13,43,85,.12)}',
     '.about-dashboard-image-wrap img{display:block;width:100%;height:auto;object-fit:contain}',
+    '#growth-operating-flow{grid-template-columns:repeat(2,minmax(0,1fr));min-height:0;padding:28px;gap:16px;background:linear-gradient(135deg,var(--navy),#174c70);border:0;align-items:stretch}',
+    '#growth-operating-flow .system-node{position:relative;min-width:0;text-align:left;padding:22px 18px;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 8px 24px rgba(13,43,85,.12);overflow:hidden}',
+    '#growth-operating-flow .system-node:before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--green),var(--blue))}',
+    '#growth-operating-flow .system-node-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:20px}',
+    '#growth-operating-flow .feature-icon{width:46px;height:46px;flex-shrink:0;margin:0;background:var(--mint);color:var(--navy)}',
+    '#growth-operating-flow .system-node span{width:auto;height:auto;margin:0;background:none;border-radius:0;color:var(--text);font-size:12px;letter-spacing:.08em}',
+    '#growth-operating-flow .system-node b{font-size:19px;color:var(--navy);line-height:1.3}',
+    '#growth-operating-flow .system-node small{font-size:12px;line-height:1.5;color:var(--text);margin-top:7px}',
+    '#growth-operating-flow .system-arrow{display:none}',
+    '@media(max-width:980px){#growth-operating-flow{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;padding:24px}#growth-operating-flow .system-arrow{display:none}}',
+    '@media(max-width:650px){#growth-operating-flow{grid-template-columns:1fr;padding:18px;gap:14px}#growth-operating-flow .system-node{padding:20px}#growth-operating-flow .system-node-top{margin-bottom:14px}}',
   ],
   'pricing-dashboard.css': [
     '.pricing-intro .section-heading{margin:0}',
@@ -39,6 +51,19 @@ const rules = {
 const headerRules = '.header .brand{display:flex;align-items:center;flex:0 0 auto}.header .brand img{width:176px!important;height:auto!important;max-width:none!important;display:block!important}@media(max-width:640px){.header .brand img{width:145px!important}}';
 const aboutRules = '.about-dashboard-image-wrap{min-height:0!important;background:transparent!important;box-shadow:0 16px 42px rgba(13,43,85,.12)}.about-dashboard-image-wrap img{display:block;width:100%;height:auto;object-fit:contain}';
 const pricingRules = '.pricing-hero-visual{position:relative;min-height:500px;overflow:hidden}.pricing-hero-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:block}.pricing-hero-visual:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(241,247,242,.32),rgba(13,43,85,.04))}.pricing-hero-visual .hero-chip{z-index:2}';
+const operatingFlowRules = `<style id="pp-operating-flow-polish">
+#growth-operating-flow{grid-template-columns:repeat(2,minmax(0,1fr));min-height:0;padding:28px;gap:16px;background:linear-gradient(135deg,var(--navy),#174c70);border:0;align-items:stretch}
+#growth-operating-flow .system-node{position:relative;min-width:0;text-align:left;padding:22px 18px;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 8px 24px rgba(13,43,85,.12);overflow:hidden}
+#growth-operating-flow .system-node:before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--green),var(--blue))}
+#growth-operating-flow .system-node-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:20px}
+#growth-operating-flow .feature-icon{width:46px;height:46px;flex-shrink:0;margin:0;background:var(--mint);color:var(--navy)}
+#growth-operating-flow .system-node span{width:auto;height:auto;margin:0;background:none;border-radius:0;color:var(--text);font-size:12px;letter-spacing:.08em}
+#growth-operating-flow .system-node b{font-size:19px;color:var(--navy);line-height:1.3}
+#growth-operating-flow .system-node small{font-size:12px;line-height:1.5;color:var(--text);margin-top:7px}
+#growth-operating-flow .system-arrow{display:none}
+@media(max-width:980px){#growth-operating-flow{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;padding:24px}#growth-operating-flow .system-arrow{display:none}}
+@media(max-width:650px){#growth-operating-flow{grid-template-columns:1fr;padding:18px;gap:14px}#growth-operating-flow .system-node{padding:20px}#growth-operating-flow .system-node-top{margin-bottom:14px}}
+</style>`;
 function beforeSource(file, text) {
   for (const rule of rules[file] || []) {
     assert.equal(text.split(rule).length - 1, 1, `baseline rule: ${file}`);
@@ -57,6 +82,11 @@ function beforeSource(file, text) {
     const mark = '<div class="pricing-intro"><div class="section-heading">';
     assert.equal(text.split(mark).length - 1, 1);
     text = text.replace(mark, '<div class="pricing-intro"><div class="section-heading" style="margin:0">');
+  }
+  if (file === 'our-system.html') {
+    const mark = '<link rel="stylesheet" href="enhancements.css">';
+    assert.equal(text.split(mark).length - 1, 1);
+    text = text.replace(mark, mark + operatingFlowRules);
   }
   if (['index.html', 'contact.html', 'our-system.html', 'what-we-fix.html'].includes(file)) {
     const mark = '<link rel="stylesheet" href="enhancements.css">';
@@ -138,8 +168,8 @@ async function main() {
   fs.mkdirSync(output, { recursive: true });
   const before = await serve(true), after = await serve(false);
   let browser;
-  const results = { sourceCommit: process.env.SOURCE_COMMIT || null, scope: 'PP-WEB-14 and PP-WEB-23 migrated style targets with actual reviewed Google Fonts',
-    limits: 'Actual requested normal Latin font readiness and scoped target parity in Chromium. Baseline restores only the reviewed phase-2 and phase-4 rules; it retains current font topology and all other changes. Does not establish older-site or whole-page font parity, deployed CSP or performance.',
+  const results = { sourceCommit: process.env.SOURCE_COMMIT || null, scope: 'PP-WEB-14, PP-WEB-23 and PP-WEB-24 migrated style targets with actual reviewed Google Fonts',
+    limits: 'Actual requested normal Latin font readiness and scoped target parity in Chromium. Baseline restores only the reviewed phase-2, phase-4 and phase-5 rules; it retains current font topology and all other changes. Does not establish older-site or whole-page font parity, deployed CSP or performance.',
     styles: [], fontReadiness: [], externalResponses: [], blockedExternal: [], requestFailures: [], localFailures: [] };
   try {
     browser = await chromium.launch({ headless: true });
