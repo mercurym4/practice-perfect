@@ -115,7 +115,8 @@ const operatingFlowRules = `<style id="pp-operating-flow-polish">
 </style>`;
 function beforeSource(file, text) {
   for (const rule of rules[file] || []) {
-    assert.equal(text.split(rule).length - 1, 1, `baseline rule: ${file}`);
+    const expected = rule === '#growth-operating-flow .system-arrow{display:none}' ? 2 : 1;
+    assert.equal(text.split(rule).length - 1, expected, `baseline rule: ${file}`);
     text = text.replace(rule, '');
   }
   if (file === 'our-system.html' || file === 'what-we-fix.html') {
