@@ -190,11 +190,12 @@ async function main() {
   let browser;
   const results = { sourceCommit: process.env.SOURCE_COMMIT || null, scope: 'PP-WEB-14 and PP-WEB-23 through PP-WEB-25 migrated style targets with actual reviewed Google Fonts',
     limits: 'Actual requested normal Latin font readiness and scoped target parity in Chromium. Baseline restores only the reviewed phase-2 and phase-4 through phase-6 rules; it retains current font topology and all other changes. Does not establish older-site or whole-page font parity, deployed CSP or performance.',
-    styles: [], fontReadiness: [], externalResponses: [], blockedExternal: [], requestFailures: [], localFailures: [] };
+    styles: [], fontReadiness: [], externalFetches: [], externalResponses: [], blockedExternal: [], requestFailures: [], localFailures: [] };
   try {
     browser = await chromium.launch({ headless: true });
     results.browser = browser.version();
     const context = await browser.newContext({ reducedMotion: 'reduce', deviceScaleFactor: 1 });
+    const approvedExternalCache = new Map();
     await context.route('**/*', async route => {
       const url = new URL(route.request().url());
       if (![before.origin, after.origin].includes(url.origin)) {
@@ -204,7 +205,25 @@ async function main() {
         // the /l/font endpoint. Keep the boundary on HTTPS + exact host + font
         // resource type instead of coupling acceptance to one CDN path shape.
         const font = url.protocol === 'https:' && url.hostname === 'fonts.gstatic.com' && request.resourceType() === 'font';
-        if (request.method() === 'GET' && (style || font)) return route.continue();
+        if (request.method() === 'GET' && (style || font)) {
+          let cached = approvedExternalCache.get(url.href);
+          if (!cached) {
+            cached = (async () => {
+              const response = await route.fetch();
+              const body = await response.body();
+              const headers = { ...response.headers() };
+              delete headers['content-encoding'];
+              delete headers['content-length'];
+              delete headers['transfer-encoding'];
+              const entry = { status: response.status(), headers, body };
+              results.externalFetches.push({ url: url.href, status: entry.status, type: request.resourceType(),
+                sha256: crypto.createHash('sha256').update(body).digest('hex') });
+              return entry;
+            })();
+            approvedExternalCache.set(url.href, cached);
+          }
+          return route.fulfill(await cached);
+        }
         results.blockedExternal.push({ url: url.href, type: request.resourceType() });
         return route.abort();
       }
@@ -233,6 +252,11 @@ async function main() {
     assert.equal(results.fontReadiness.length, targets.length * widths.length);
     assert.deepEqual(results.blockedExternal, [], 'unexpected external dependency');
     assert.deepEqual(results.requestFailures, [], 'required requests succeeded');
+    assert.ok(results.externalFetches.some(item => item.type === 'stylesheet' && item.status === 200), 'Google CSS fetched once');
+    assert.ok(results.externalFetches.some(item => item.type === 'font' && item.status === 200), 'font bytes fetched once');
+    assert.ok(results.externalFetches.every(item => item.status === 200), 'approved external fetches succeeded');
+    assert.equal(new Set(results.externalFetches.map(item => item.url)).size, results.externalFetches.length,
+      'each approved external URL fetched once');
     assert.ok(results.externalResponses.some(item => item.type === 'stylesheet' && item.status === 200), 'Google CSS received');
     assert.ok(results.externalResponses.some(item => item.type === 'font' && item.status === 200), 'font bytes received');
     assert.deepEqual(results.localFailures, [], 'required local assets must load');
