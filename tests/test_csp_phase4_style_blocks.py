@@ -52,6 +52,22 @@ PRICING_ADDITION = """
 .pricing-hero-visual:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(241,247,242,.32),rgba(13,43,85,.04))}
 .pricing-hero-visual .hero-chip{z-index:2}
 """
+OPERATING_FLOW_RULES = """#growth-operating-flow{grid-template-columns:repeat(2,minmax(0,1fr));min-height:0;padding:28px;gap:16px;background:linear-gradient(135deg,var(--navy),#174c70);border:0;align-items:stretch}
+#growth-operating-flow .system-node{position:relative;min-width:0;text-align:left;padding:22px 18px;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 8px 24px rgba(13,43,85,.12);overflow:hidden}
+#growth-operating-flow .system-node:before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--green),var(--blue))}
+#growth-operating-flow .system-node-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:20px}
+#growth-operating-flow .feature-icon{width:46px;height:46px;flex-shrink:0;margin:0;background:var(--mint);color:var(--navy)}
+#growth-operating-flow .system-node span{width:auto;height:auto;margin:0;background:none;border-radius:0;color:var(--text);font-size:12px;letter-spacing:.08em}
+#growth-operating-flow .system-node b{font-size:19px;color:var(--navy);line-height:1.3}
+#growth-operating-flow .system-node small{font-size:12px;line-height:1.5;color:var(--text);margin-top:7px}
+#growth-operating-flow .system-arrow{display:none}
+@media(max-width:980px){#growth-operating-flow{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;padding:24px}#growth-operating-flow .system-arrow{display:none}}
+@media(max-width:650px){#growth-operating-flow{grid-template-columns:1fr;padding:18px;gap:14px}#growth-operating-flow .system-node{padding:20px}#growth-operating-flow .system-node-top{margin-bottom:14px}}"""
+OPERATING_FLOW_STYLE = f'<style id="pp-operating-flow-polish">\n{OPERATING_FLOW_RULES}\n</style>'
+PHASE5_ADDITION = f"""
+/* CSP phase 5: exact Our System operating-flow rules moved from the page block. */
+{OPERATING_FLOW_RULES}
+"""
 
 
 def git_blob_sha(text):
@@ -66,8 +82,10 @@ class CspPhase4StyleBlockTest(unittest.TestCase):
         for name in SIMPLE_PAGES:
             html = (ROOT / name).read_text(encoding="utf-8")
             self.assertEqual(1, html.count(anchor), name)
+            later_style = OPERATING_FLOW_STYLE if name == "our-system.html" else ""
             restored[name] = html.replace(
-                anchor, anchor + f'<style id="pp-logo-match-services">{HEADER_RULES}</style>'
+                anchor,
+                anchor + f'<style id="pp-logo-match-services">{HEADER_RULES}</style>' + later_style,
             )
 
         about = (ROOT / "about.html").read_text(encoding="utf-8")
@@ -85,6 +103,8 @@ class CspPhase4StyleBlockTest(unittest.TestCase):
         )
 
         enhancements = (ROOT / "enhancements.css").read_text(encoding="utf-8")
+        self.assertTrue(enhancements.endswith(PHASE5_ADDITION))
+        enhancements = enhancements.removesuffix(PHASE5_ADDITION)
         self.assertTrue(enhancements.endswith(ENHANCEMENTS_ADDITION))
         restored["enhancements.css"] = enhancements.removesuffix(ENHANCEMENTS_ADDITION)
         pricing_css = (ROOT / "pricing-dashboard.css").read_text(encoding="utf-8")
@@ -127,10 +147,10 @@ class CspPhase4StyleBlockTest(unittest.TestCase):
         self.assertIn("@media(max-width:640px){.header .brand img{width:145px!important}}", enhancements)
         self.assertNotIn("@media(max-width:650px){.header .brand img", enhancements)
 
-    def test_inventory_reduces_to_only_the_deferred_phase5_and_phase6_blocks(self):
+    def test_inventory_reduces_to_only_the_deferred_phase6_block(self):
         result = inventory(ROOT)
         self.assertTrue(result["ok"], result)
-        self.assertEqual(2, result["counts"]["inline_style_blocks"])
+        self.assertEqual(1, result["counts"]["inline_style_blocks"])
         self.assertEqual(0, result["counts"]["inline_script_blocks"])
         self.assertEqual(0, result["counts"]["style_attributes"])
         self.assertEqual(0, result["counts"]["inline_event_handlers"])
@@ -140,7 +160,7 @@ class CspPhase4StyleBlockTest(unittest.TestCase):
             if group["kind"] == "style-block"
             for item in group["locations"]
         )
-        self.assertEqual(["our-system.html", "services.html"], remaining_paths)
+        self.assertEqual(["services.html"], remaining_paths)
 
 
 if __name__ == "__main__":
