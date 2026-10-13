@@ -46,7 +46,7 @@ const targets = [
   { key: 'services-first-card', file: 'services.html', selector: '.service-card:first-child' },
   { key: 'services-partner', file: 'services.html', selector: '.partner-panel' },
   { key: 'services-process', file: 'services.html', selector: '.process-grid' },
-  { key: 'services-cta', file: 'services.html', selector: '.cta-row' },
+  { key: 'services-cta', file: 'services.html', selector: '.reference-mountain-cta' },
   { key: 'services-footer', file: 'services.html', selector: '.footer' },
 ];
 const rules = {
