@@ -24,6 +24,10 @@ jobs:
         run: |
           python3 -m unittest discover -s tests -p test_mobile_menu_extraction.py -v
           node tests/mobile-menu.test.cjs
+      - name: Verify contact confirmation recovery and private analytics
+        run: |
+          node --test tests/contact-form.test.cjs
+          node tests/analytics.test.cjs
       - name: Verify inline-style migration contract
         run: |
           python3 -m unittest discover -s tests -p test_inline_style_migration.py -v
