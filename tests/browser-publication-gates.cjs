@@ -5,6 +5,7 @@ const path = require('node:path');
 const http = require('node:http');
 const crypto = require('node:crypto');
 const { chromium } = require('playwright');
+const { runPublicationContactRecovery } = require('./contact-browser-publication.cjs');
 const root = path.resolve(__dirname, '..');
 const output = path.resolve(process.env.BROWSER_EVIDENCE_DIR || '/tmp/practice-perfect-browser-evidence');
 const widths = [320, 390, 640, 641, 650, 651, 768, 980, 981, 1440, 1700, 2560];
@@ -232,10 +233,17 @@ async function main() {
   let browser;
   const results = { sourceCommit: process.env.SOURCE_COMMIT || null, scope: 'PP-WEB-14, PP-WEB-22 through PP-WEB-25 migrated style targets; PP-WEB-15 keyboard; mobile navigation',
     limits: 'External fonts blocked for deterministic fallback-font parity. Services full-page parity covers five transition widths only. Does not establish deployed CSP, production fonts, image selection or whole-site full-page visual acceptance.',
-    styles: [], fullPage: [], print: [], focus: [], keyboard: [], navigation: [], localFailures: [] };
+    styles: [], fullPage: [], print: [], focus: [], keyboard: [], navigation: [], localFailures: [],
+    contactRecovery: { passed: false, status: 'not-executed' } };
   try {
     browser = await chromium.launch({ headless: true });
     results.browser = browser.version();
+    try {
+      results.contactRecovery = await runPublicationContactRecovery(browser, root, results.sourceCommit);
+    } catch (error) {
+      results.contactRecovery = { passed: false, status: 'failed', error: String(error.message) };
+      throw error;
+    }
     const context = await browser.newContext({ reducedMotion: 'reduce', deviceScaleFactor: 1 });
     await context.route('**/*', async route => {
       const url = new URL(route.request().url());
@@ -333,7 +341,9 @@ async function main() {
       results.navigation.push({ route, open: true, escapeClose: true, resizeClose: true });
     }
     assert.deepEqual(results.localFailures, [], 'required local assets must load');
+    assert.equal(results.contactRecovery.passed, true, 'Contact recovery must also pass');
     results.passed = true;
+    console.log(`PASS: ${results.contactRecovery.executedScenarioCount} contact-recovery scenarios (native DOM, simulated transport; no live delivery).`);
     console.log(`PASS: ${results.styles.length} computed/pixel comparisons; ${results.fullPage.length} Services full-page comparisons; ${results.print.length} print comparison; ${results.focus.length} focus comparisons; ${results.keyboard.length} keyboard checks; ${results.navigation.length} menu checks.`);
   } finally {
     fs.writeFileSync(path.join(output, 'results.json'), JSON.stringify(results, null, 2));
