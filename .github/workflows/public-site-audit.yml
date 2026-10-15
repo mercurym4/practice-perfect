@@ -65,6 +65,12 @@ jobs:
           persist-credentials: false
       - name: Verify literal approved-main bytes and provenance without publication
         run: python3 scripts/immutable_site_baseline.py --repository .pp-approved-main
+      - name: Verify approved-content preservation guards
+        run: python3 -m unittest discover -s tests -p test_verify_main_content.py -v
+      - name: Compare approved main copy metadata and image references without publication
+        env:
+          SOURCE_COMMIT: ${{ github.event.pull_request.head.sha }}
+        run: python3 scripts/verify_main_content.py --baseline-repository .pp-approved-main --candidate .
 
 
   browser-gates:
