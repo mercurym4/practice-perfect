@@ -88,6 +88,16 @@ function requireCaptureDimensions(actual, geometry) {
   assert.deepEqual(actual, geometry.document, 'Full-page capture dimensions must exactly match admitted geometry');
   captureReservation({ document:actual });
 }
+function firstPairEvidence(mainBytes, candidateBytes, mainName, candidateName) {
+  assert.ok(Buffer.isBuffer(mainBytes) && Buffer.isBuffer(candidateBytes));
+  assert.equal(typeof mainName, 'string'); assert.equal(typeof candidateName, 'string');
+  const match = /^(\d{2}-(?:390|1440))-main\.png$/.exec(mainName);
+  assert.ok(match && mainName.length === match[0].length, 'Invalid first-pair main filename');
+  assert.equal(candidateName, `${match[1]}-candidate.png`, 'Evidence must remain within one first-capture pair');
+  return Object.freeze(mainBytes.equals(candidateBytes)
+    ? { evidenceFile:mainName, storage:'deduplicated-equal-first-capture' }
+    : { evidenceFile:candidateName, storage:'original-first-capture' });
+}
 function requireFontChecks(checks, route) {
   const expected = [400,500,600,700,800].map(weight => ({ family:'Inter', weight }));
   if (SERIF_ROUTES.includes(route)) expected.push({ family:'DM Serif Display', weight:400 });
@@ -112,4 +122,4 @@ function requireCoverage(cases, routes) {
   assert.ok(cases.every(item => item.passed === true), 'Incomplete literal-main parity');
 }
 module.exports = { WIDTHS, SERIF_ROUTES, MAX_JSON_BYTES, MAX_EVIDENCE_BYTES, sourceCommit, exporterArguments,
-  Deadline, EvidenceBudget, captureReservation, sitemapRoutes, externalKind, normalizeGeometry, pngDimensions, requireCaptureDimensions, requireFontChecks, requireCoverage };
+  Deadline, EvidenceBudget, captureReservation, sitemapRoutes, externalKind, normalizeGeometry, pngDimensions, requireCaptureDimensions, firstPairEvidence, requireFontChecks, requireCoverage };

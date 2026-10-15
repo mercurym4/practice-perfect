@@ -198,9 +198,15 @@ async function main() {
           const reservation = budget.reserve(policy.captureReservation(geometry));
           const image = await page.screenshot({ fullPage:true, animations:'disabled', timeout:deadline.remaining(10000) });
           const name = `${String(index).padStart(2, '0')}-${width}-${side === 0 ? 'main' : 'candidate'}.png`;
-          write(name, image, reservation);
+          const stored = side === 0 ? { evidenceFile:name, storage:'original-first-capture' }
+            : policy.firstPairEvidence(captures[0], image, record.main.name, name);
+          if (stored.storage === 'deduplicated-equal-first-capture') {
+            // Both original PNGs were independently captured. Refund bytes only after exact Buffer equality.
+            assert.ok(image.length <= reservation.bytes, 'Evidence reservation exceeded before deduplication');
+            budget.complete(reservation, 0);
+          } else write(name, image, reservation);
           const dimensions = policy.pngDimensions(image);
-          const item = { name, sha256:digest(image), bytes:image.length, dimensions, geometry, fontChecks:checks };
+          const item = { name, ...stored, sha256:digest(image), bytes:image.length, dimensions, geometry, fontChecks:checks };
           record[side === 0 ? 'main' : 'candidate'] = item; captures.push(image);
           policy.requireCaptureDimensions(dimensions, geometry);
         } finally { await page.close(); }
