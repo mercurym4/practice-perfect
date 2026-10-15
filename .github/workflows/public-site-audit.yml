@@ -92,6 +92,17 @@ jobs:
         env:
           CANDIDATE_COMMIT: ${{ github.event.pull_request.head.sha }}
         run: python3 scripts/candidate_site_snapshot.py --repository .pp-candidate-head --commit "$CANDIDATE_COMMIT"
+      - name: Verify bounded candidate envelope and literal-main adapter guards
+        run: |
+          python3 -m unittest discover -s tests -p test_export_candidate_snapshot.py -v
+          node --test tests/candidate-snapshot-contract.test.cjs tests/snapshot-request-handler.test.cjs tests/main-parity-policy.test.cjs
+          node --check tests/browser-main-parity.cjs
+      - name: Verify actual candidate public bytes across the Python Node bridge
+        env:
+          CANDIDATE_COMMIT: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -o pipefail
+          python3 scripts/export_candidate_snapshot.py --repository .pp-candidate-head --commit "$CANDIDATE_COMMIT" | node tests/candidate-snapshot-contract.cjs --commit "$CANDIDATE_COMMIT"
 
 
   browser-gates:
@@ -138,6 +149,18 @@ jobs:
           SOURCE_COMMIT: ${{ github.event.pull_request.head.sha }}
           FONT_EVIDENCE_DIR: ${{ runner.temp }}/font-evidence
         run: node tests/browser-font-readiness.cjs
+      - name: Check out immutable approved main for literal public rendering
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: 86894c29c5d02baad35b3cc47815d2d0ec06315e
+          path: .pp-approved-main
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Compare literal approved main with exact candidate public bytes
+        env:
+          SOURCE_COMMIT: ${{ github.event.pull_request.head.sha }}
+          FONT_EVIDENCE_DIR: ${{ runner.temp }}/font-evidence
+        run: node tests/browser-main-parity.cjs
       - name: Preserve font readiness evidence
         if: always()
         uses: actions/upload-artifact@v4
