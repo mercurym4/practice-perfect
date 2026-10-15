@@ -1,7 +1,7 @@
 'use strict';
 // Pure decoder: no filesystem, network, subprocess, browser or mutable worktree reads.
 const crypto = require('node:crypto');
-const MAPPING = 'd8c9bada27a55ed1b6319e53674f794e048de15874f33f2a3ba05af62570d73b';
+const MAPPING = '47e1b87881df615984cd81a6ee2ee63e93ba69c846704e8f24c7ab1fc8281800';
 const PATHS = Object.freeze([
   "about.html",
   "analytics.js",

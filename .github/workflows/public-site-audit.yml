@@ -95,6 +95,7 @@ jobs:
       - name: Verify bounded candidate envelope and literal-main adapter guards
         run: |
           python3 -m unittest discover -s tests -p test_export_candidate_snapshot.py -v
+          python3 -m unittest discover -s tests -p test_services_design_preservation.py -v
           node --test tests/candidate-snapshot-contract.test.cjs tests/snapshot-request-handler.test.cjs tests/main-parity-policy.test.cjs
           node --check tests/browser-main-parity.cjs
       - name: Verify actual candidate public bytes across the Python Node bridge

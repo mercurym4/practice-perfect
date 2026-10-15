@@ -17,7 +17,7 @@ MAX_JSON_BYTES = 24 * 1024 * 1024
 REPOSITORY = "mercurym4/practice-perfect"
 SOURCE = "authenticated-local-git-object-chain"
 SCHEMA = "pp-candidate-public-snapshot"
-SELECTED_INVENTORY_SHA256 = "d8c9bada27a55ed1b6319e53674f794e048de15874f33f2a3ba05af62570d73b"
+SELECTED_INVENTORY_SHA256 = "47e1b87881df615984cd81a6ee2ee63e93ba69c846704e8f24c7ab1fc8281800"
 _HEX40 = re.compile(r"[0-9a-f]{40}\Z")
 _HEX64 = re.compile(r"[0-9a-f]{64}\Z")
 

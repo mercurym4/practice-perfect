@@ -10,7 +10,7 @@ const {test} = require('node:test');
 const MODULE = path.join(__dirname, 'candidate-snapshot-contract.cjs');
 const source = fs.readFileSync(MODULE, 'utf8');
 const PATHS = JSON.parse(source.match(/const PATHS = Object.freeze\((\[[\s\S]*?\])\);/)[1]);
-const FIXED = 'd8c9bada27a55ed1b6319e53674f794e048de15874f33f2a3ba05af62570d73b';
+const FIXED = '47e1b87881df615984cd81a6ee2ee63e93ba69c846704e8f24c7ab1fc8281800';
 const COMMIT = '1'.repeat(40);
 const TREE = '2'.repeat(40);
 const hash = (algorithm, bytes) => crypto.createHash(algorithm).update(bytes).digest('hex');

@@ -1,4 +1,4 @@
-from hashlib import sha1
+from hashlib import sha1, sha256
 from pathlib import Path
 import re
 import sys
@@ -21,8 +21,26 @@ def git_blob_sha(text):
     return sha1(f"blob {len(data)}\0".encode() + data).hexdigest()
 
 
+def historical_services_css(css):
+    """Project ONLY the separately reviewed PP44 suffix out of this old migration proof.
+
+    The new source guard and literal-main renderer qualify the actual repair;
+    every historical migration pin/assertion below stays unchanged.
+    """
+    raw = css.encode("utf-8")
+    suffix_bytes = 629
+    if (len(raw) != 16349 + suffix_bytes
+            or sha256(raw[-suffix_bytes:]).hexdigest()
+            != "321c0e8646b819ccf3b9059d29b2cade1e70004c800adba8ef07ca9f6b4f07fc"):
+        raise AssertionError("Unreviewed Services repair suffix")
+    original = raw[:-suffix_bytes].decode("utf-8")
+    if git_blob_sha(original) != "4a696ef68df2aaa7509deb89b1962eba303cebf8":
+        raise AssertionError("Historical Services stylesheet changed")
+    return original
+
+
 def split_candidate():
-    css = (ROOT / "services-reference.css").read_text(encoding="utf-8")
+    css = historical_services_css((ROOT / "services-reference.css").read_text(encoding="utf-8"))
     encoded = css.encode("utf-8")
     block = encoded[:STYLE_BYTES].decode("utf-8")
     original = encoded[STYLE_BYTES:].decode("utf-8").removeprefix("\n")
@@ -53,6 +71,15 @@ def top_level_preludes(css):
 
 
 class CspPhase6ServicesStyleBlockTest(unittest.TestCase):
+    def test_repair_projection_rejects_missing_changed_duplicate_or_extended_source(self):
+        css = (ROOT / "services-reference.css").read_text(encoding="utf-8")
+        self.assertEqual("4a696ef68df2aaa7509deb89b1962eba303cebf8",
+                         git_blob_sha(historical_services_css(css)))
+        for changed in (css[:-629], css + css[-629:], css + "\n",
+                        "x" + css[1:], css[:-1] + "x"):
+            with self.subTest(length=len(changed)), self.assertRaises(AssertionError):
+                historical_services_css(changed)
+
     def test_only_the_reviewed_services_block_moved(self):
         html = (ROOT / "services.html").read_text(encoding="utf-8")
         css, block, original_css = split_candidate()

@@ -9,7 +9,7 @@ The Python exporter reads the candidate through `CandidateSiteSnapshot`, which
 authenticates the local raw commit → root tree → child tree → blob chain for the
 required full lowercase 40-hex commit. It never reads candidate worktree content.
 The exporter additionally admits only the fixed public path/mode/blob mapping
-`d8c9bada27a55ed1b6319e53674f794e048de15874f33f2a3ba05af62570d73b`.
+`47e1b87881df615984cd81a6ee2ee63e93ba69c846704e8f24c7ab1fc8281800`.
 That mapping is 84 paths: the existing 83 `PUBLIC_PATHS` plus `mobile-menu.js`.
 Private repository paths are not exported. Changing any public blob or mode
 requires a separately reviewed source pin update; neither CLI nor environment

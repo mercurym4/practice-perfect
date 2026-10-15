@@ -177,7 +177,7 @@ class ExporterTests(unittest.TestCase):
 const source=fs.readFileSync(process.argv[1],'utf8');
 const mapping=process.argv[2],expected=process.argv[3];
 const sandbox={require,module:{exports:{}},Buffer};
-vm.runInNewContext(source.replace("const MAPPING = 'd8c9bada27a55ed1b6319e53674f794e048de15874f33f2a3ba05af62570d73b';",
+vm.runInNewContext(source.replace("const MAPPING = '47e1b87881df615984cd81a6ee2ee63e93ba69c846704e8f24c7ab1fc8281800';",
 "const MAPPING = '"+mapping+"';"),sandbox);
 const s=sandbox.module.exports.decodeCandidateSnapshot(fs.readFileSync(0),expected);
 process.stdout.write(JSON.stringify({count:s.fileCount,total:s.totalBytes,
