@@ -54,6 +54,17 @@ jobs:
         run: python3 scripts/inventory_csp.py .
       - name: Audit the live canonical deployment (read-only)
         run: python3 scripts/audit_live_site.py
+      - name: Verify literal approved-main baseline guards
+        run: python3 -m unittest discover -s tests -p test_immutable_site_baseline.py -v
+      - name: Check out immutable approved main for object inventory only
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: 86894c29c5d02baad35b3cc47815d2d0ec06315e
+          path: .pp-approved-main
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Verify literal approved-main bytes and provenance without publication
+        run: python3 scripts/immutable_site_baseline.py --repository .pp-approved-main
 
 
   browser-gates:
