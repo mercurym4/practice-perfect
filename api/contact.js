@@ -39,7 +39,7 @@ module.exports = async function contact(req, res) {
       body: JSON.stringify({ from: `Practice Perfect <${CONTACT_FROM_EMAIL}>`, to: [CONTACT_TO_EMAIL], reply_to: values.email, subject: 'Practice Perfect — Strategy Call Request', text })
     });
     const result = await response.json();
-    if (!response.ok || !result.id) {
+    if (!response.ok || typeof result?.id !== 'string' || !result.id.trim()) {
       console.error('Contact email rejected', { status: response.status, code: result.name || 'unknown' });
       throw new Error('Email provider did not accept request');
     }

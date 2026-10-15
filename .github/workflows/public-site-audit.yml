@@ -26,7 +26,7 @@ jobs:
           node tests/mobile-menu.test.cjs
       - name: Verify contact confirmation recovery and private analytics
         run: |
-          node --test tests/contact-form.test.cjs
+          node --test tests/contact-form.test.cjs tests/contact-api.test.cjs
           node tests/analytics.test.cjs
           node --test tests/contact-browser-contract.test.cjs tests/contact-browser-publication.test.cjs tests/capture-readiness.test.cjs
       - name: Verify inline-style migration contract
