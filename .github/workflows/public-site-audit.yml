@@ -28,7 +28,7 @@ jobs:
         run: |
           node --test tests/contact-form.test.cjs
           node tests/analytics.test.cjs
-          node --test tests/contact-browser-contract.test.cjs
+          node --test tests/contact-browser-contract.test.cjs tests/contact-browser-publication.test.cjs
       - name: Verify inline-style migration contract
         run: |
           python3 -m unittest discover -s tests -p test_inline_style_migration.py -v
