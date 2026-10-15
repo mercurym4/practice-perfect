@@ -79,6 +79,19 @@ jobs:
         run: |
           set -o pipefail
           python3 scripts/export_main_snapshot.py --repository .pp-approved-main | node tests/main-snapshot-contract.cjs
+      - name: Verify authenticated candidate snapshot guards
+        run: python3 -m unittest discover -s tests -p test_candidate_site_snapshot.py -v
+      - name: Check out exact candidate for authenticated public-byte inventory only
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: .pp-candidate-head
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Verify exact candidate commit tree chain and public bytes
+        env:
+          CANDIDATE_COMMIT: ${{ github.event.pull_request.head.sha }}
+        run: python3 scripts/candidate_site_snapshot.py --repository .pp-candidate-head --commit "$CANDIDATE_COMMIT"
 
 
   browser-gates:
