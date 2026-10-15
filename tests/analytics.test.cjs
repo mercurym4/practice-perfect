@@ -54,7 +54,7 @@ async function verifySubmission() {
   class FormData { constructor() { return [['email', 'private@example.com'], ['message', 'private message']]; } }
   const window = { va: (type, payload) => events.push({ type, payload }) };
   vm.runInNewContext(fs.readFileSync('contact-form.js', 'utf8'), {
-    document, window, FormData, Set,
+    document, window, FormData, Set, AbortController, setTimeout, clearTimeout,
     fetch: async () => ({ ok: response.ok, json: async () => response.result })
   });
   const event = { preventDefault() {} };
@@ -64,10 +64,10 @@ async function verifySubmission() {
   assert.equal(resets, 1);
   await submit(event);
   assert.equal(events.length, 1, 'Repeated provider IDs must not count twice');
-  response = { ok: false, result: { error: 'Request rejected' } };
+  response = { ok: false, result: { error: 'Please check your form details.' } };
   await submit(event);
   assert.equal(events.length, 1, 'Failed submissions must not count');
-  assert.equal(status.textContent, 'Request rejected');
+  assert.equal(status.textContent, 'Please check your form details.');
   assert.equal(button.disabled, false);
   response = { ok: true, result: { ok: true, requestId: 'second-request' } };
   window.va = () => { throw Error('Analytics unavailable'); };

@@ -1,0 +1,9 @@
+# Actual Google Fonts readiness gate
+
+Protected draft PR #2 adds an independent Chromium font readiness job. It serves the exact head checkout on loopback and makes analytics/contact-form scripts inert. Only HTTPS GET requests to fonts.googleapis.com/css2 as stylesheets and fonts.gstatic.com/s/ as font resources are allowed externally. Unexpected external dependencies, HTTP failures and failed requests fail the gate. Nothing is deployed, merged, published or submitted.
+
+Every one of the 27 sitemap pages receives a fresh browser context. The harness loads Inter normal weights 400, 500, 600, 700 and 800 using the Latin text “Practice Perfect 0123456789”; About, Contact, Our System, Pricing and What We Fix additionally load normal 400 DM Serif Display. Each document.fonts.load result must contain actual FontFace objects with the expected family, normal style, matching weight descriptor or range and loaded status. Empty fallback-compatible checks cannot pass. Successful Google stylesheet and font byte responses are independently required on every page. Totals must equal 32 family/page groups and 140 weight/page checks.
+
+Evidence JSON records exact source head, Chromium version, real face descriptors/statuses, request outcomes and failures. The separate existing fallback-font visual/keyboard/menu gate stays unchanged. CI execution and matching-head results must pass before accepting readiness; adding this harness does not establish a passing result.
+
+This establishes readiness of the requested Latin normal font faces in Chromium, including weights not necessarily used by each page. It does not establish which rendered glyph font was selected by every existing element, full Unicode or italic coverage, font screenshot parity, production headers/firewall, timing/FCP/LCP gains, physical-device behavior or website publication. Google provider/network failure remains a real failing gate, not a reason to replace font readiness with fallback success.
