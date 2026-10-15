@@ -1,5 +1,9 @@
 # Offline contact recovery browser fixture — PP-WEB-29
 
+## Current existing-workflow qualification checkpoint — October 14, 2026
+
+PP-WEB-30/31 integrates this actual frozen fixture into the existing browser publication runner and adds its nine helper guards to the existing pure Node command. The existing pull-request workflow is now the qualification route for the current candidate; this documentation checkpoint requests its normal execution without changing jobs, runners, dependencies, permissions, timeouts or artifact locations. Forty-three pure Node methods passed before this checkpoint. All ten native recovery scenarios remain UNEXECUTED until this exact candidate's actual browser evidence proves otherwise; no older browser pass or pure-helper count substitutes for that evidence. The exact branch deploymentEnabled=false rule remains; PR2 stays draft/unmerged/unpublished. No live form/email or publication approval is inferred from CI. Command Center's assigned controls pipeline remains the release priority while these independent website checks run.
+
 ## PP-WEB-30 existing runner integration — source qualification only
 
 `tests/browser-publication-gates.cjs` now passes its already-owned Chromium Browser to `runPublicationContactRecovery` immediately after launch. The recovery fixture creates and closes its own ten fresh offline contexts, without changing the parity context or its inert frontend scripts. The original runner's finally still closes the Browser and both loopback servers. A recovery failure propagates to the existing process failure path; it records `contactRecovery.passed=false` and a failure message in the existing results.json evidence. The overall runner can pass only after contact recovery and every original parity/keyboard/menu assertion pass.
