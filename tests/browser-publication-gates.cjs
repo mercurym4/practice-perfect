@@ -7,6 +7,7 @@ const crypto = require('node:crypto');
 const { chromium } = require('playwright');
 const { runPublicationContactRecovery } = require('./contact-browser-publication.cjs');
 const { waitForCaptureReady, captureDiagnostics } = require('./capture-readiness.cjs');
+const { collectPartnerCaptureSamples } = require('./partner-capture-diagnostics.cjs');
 const root = path.resolve(__dirname, '..');
 const output = path.resolve(process.env.BROWSER_EVIDENCE_DIR || '/tmp/practice-perfect-browser-evidence');
 const widths = [320, 390, 640, 641, 650, 651, 768, 980, 981, 1440, 1700, 2560];
@@ -236,7 +237,13 @@ async function snapshot(page, origin, target, width, before = false) {
   });
   const image = await element.screenshot({ animations: 'disabled' });
   const diagnostics = await page.evaluate(captureDiagnostics, before && target.beforeSelector ? target.beforeSelector : target.selector);
-  return { computed, image, diagnostics, sha256: crypto.createHash('sha256').update(image).digest('hex') };
+  const sha256 = crypto.createHash('sha256').update(image).digest('hex');
+  const repeatCaptures = await collectPartnerCaptureSamples({
+    selector: target.selector, originalSha256: sha256,
+    capture: options => element.screenshot(options),
+    describe: () => page.evaluate(captureDiagnostics, target.selector)
+  });
+  return { computed, image, diagnostics, sha256, repeatCaptures };
 }
 async function main() {
   fs.mkdirSync(output, { recursive: true });
@@ -244,7 +251,7 @@ async function main() {
   let browser;
   const results = { sourceCommit: process.env.SOURCE_COMMIT || null, scope: 'PP-WEB-14, PP-WEB-22 through PP-WEB-25 migrated style targets; PP-WEB-15 keyboard; mobile navigation',
     limits: 'External fonts blocked for deterministic fallback-font parity. Services full-page parity covers five transition widths only. Does not establish deployed CSP, production fonts, image selection or whole-site full-page visual acceptance.',
-    styles: [], fullPage: [], print: [], focus: [], keyboard: [], navigation: [], localFailures: [],
+    styles: [], fullPage: [], print: [], focus: [], keyboard: [], navigation: [], localFailures: [], partnerCaptures: [],
     contactRecovery: { passed: false, status: 'not-executed' } };
   try {
     browser = await chromium.launch({ headless: true });
@@ -273,8 +280,18 @@ async function main() {
       const key = `${target.key || target.file.replace('.html', '')}-${width}`;
       fs.writeFileSync(path.join(output, `${key}-before.png`), a.image);
       fs.writeFileSync(path.join(output, `${key}-after.png`), b.image);
+      if (a.repeatCaptures && b.repeatCaptures)
+        results.partnerCaptures.push({ key, before: a.repeatCaptures.evidence, after: b.repeatCaptures.evidence });
       if (JSON.stringify(b.computed) !== JSON.stringify(a.computed) || b.sha256 !== a.sha256)
         results.failedComparison = { key, before: a.diagnostics, after: b.diagnostics };
+      if (results.failedComparison?.key === key) {
+        for (const [side, shot] of [['before', a], ['after', b]]) {
+          for (const sample of shot.repeatCaptures?.images || []) {
+            try { fs.writeFileSync(path.join(output, `${key}-${side}-diagnostic-${sample.index}.png`), sample.image); }
+            catch (error) { (shot.repeatCaptures.evidence.writeErrors ||= []).push(String(error?.message ?? error)); }
+          }
+        }
+      }
       assert.deepEqual(b.computed, a.computed, `${key}: computed styles/geometry`);
       assert.equal(b.sha256, a.sha256, `${key}: target pixel parity`);
       results.styles.push({ file: target.file, selector: target.selector, width, screenshotSha256: b.sha256 });
