@@ -1,4 +1,16 @@
 {
   "cleanUrls": true,
-  "trailingSlash": false
+  "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/services/debt-defense-direct-mail",
+      "destination": "/services/direct-mail-marketing",
+      "permanent": true
+    },
+    {
+      "source": "/resources/debt-defense-marketing-fit",
+      "destination": "/resources/direct-mail-marketing-fit",
+      "permanent": true
+    }
+  ]
 }

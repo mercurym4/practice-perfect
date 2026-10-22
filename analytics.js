@@ -15,7 +15,7 @@
     'practice-growth-audit', 'revenue-growth-sprint',
     'fractional-sales-leadership', 'law-firm-intake-consulting',
     'website-design', 'website-audit-overhaul', 'seo-marketing',
-    'ppc-marketing', 'debt-defense-direct-mail', 'pi-mva-lead-generation'
+    'ppc-marketing', 'direct-mail-marketing', 'pi-mva-lead-generation'
   ]);
   document.addEventListener('click', (event) => {
     const link = event.target.closest?.('a[href]');
