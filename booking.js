@@ -14,13 +14,17 @@
     if (event.data?.event === 'calendly.event_type_viewed') status.textContent = 'Choose an available date and time below.';
     if (event.data?.event !== 'calendly.event_scheduled' || booked) return;
     booked = true;
+    document.getElementById('booking-title').textContent = 'Your strategy call is booked';
+    document.getElementById('booking-intro').textContent = 'Booking complete. Check your email for your meeting details.';
     status.textContent = 'Your strategy call is booked. Check your email for the meeting details.';
     track('strategy_call_booked');
   });
   document.getElementById('booking-fallback').addEventListener('click', () => track('scheduler_external_clicked'));
   window.ppOpenBooking = () => {
     panel.hidden = false;
-    document.getElementById('booking-title').focus();
+    document.getElementById('strategy-call-form').hidden = true;
+    document.getElementById('booking-title').focus({ preventScroll: true });
+    panel.scrollIntoView({ behavior: 'auto', block: 'start' });
     if (started) return;
     started = true;
     track('scheduler_opened');

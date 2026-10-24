@@ -17,7 +17,7 @@
       });
       const result = await response.json();
       if (!response.ok || !result.ok) throw new Error(result.error || 'Your request was not sent. Please try again.');
-      status.textContent = 'Thank you. Your strategy-call request has been sent. We’ll follow up using the email you provided.';
+      status.textContent = 'Thank you. Your details have been received. Next: choose your call time in the calendar below to finish booking.';
       try { window.ppOpenBooking?.(); } catch (_) {
         // A scheduler failure must not turn an accepted inquiry into an error.
       }
@@ -35,7 +35,7 @@
       status.textContent = error.message === 'Failed to fetch' ? 'Your request could not be confirmed. Please try again or email mike@practiceperfect.us directly.' : error.message;
     } finally {
       button.disabled = false;
-      button.textContent = 'Request a Strategy Call →';
+      button.textContent = 'Continue to scheduling →';
     }
   });
 })();

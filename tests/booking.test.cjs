@@ -5,9 +5,11 @@ function setup() {
  const events=[], scripts=[], listeners={};
  const frame={contentWindow:{}};
  const elements={
-  'booking-panel':{hidden:true},
+  'booking-panel':{hidden:true,scrollIntoView(){this.scrolled=true}},
   'calendly-embed':{querySelector:()=>frame},
   'booking-status':{},
+  'strategy-call-form':{hidden:false},
+  'booking-intro':{},
   'booking-title':{focus(){}},
   'booking-fallback':{addEventListener:(n,f)=>listeners.fallback=f}
  };
@@ -18,6 +20,8 @@ function setup() {
 }
 const t=setup();
 t.window.ppOpenBooking();t.window.ppOpenBooking();
+assert.equal(t.elements['strategy-call-form'].hidden,true);
+assert.equal(t.elements['booking-panel'].scrolled,true);
 assert.equal(t.scripts.length,1);assert.equal(t.elements['booking-panel'].hidden,false);
 t.scripts[0].onload();
 const notify=(origin,source,event)=>t.listeners.message({origin,source,data:{event}});
