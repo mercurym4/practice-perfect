@@ -7,9 +7,9 @@ let sent;
 global.fetch=async(u,o)=>{sent=JSON.parse(o.body);return{ok:true,json:async()=>({id:'test'})}};
 async function run(extra){let code;await handler({method:'POST',headers:{origin:'https://practiceperfect.us',host:'practiceperfect.us'},body:{first_name:'Test',last_name:'Visitor',email:'test@example.com',phone:'7135550123',...extra}},{setHeader(){},status(c){code=c;return this},json(){}});return code;}
 (async()=>{
- assert.equal(await run({}),200);assert.match(sent.text,/NO — do not text/);
- assert.equal(await run({sms_consent:'yes',consent_version:copy.version}),200);assert.match(sent.text,/opt-in: YES/);assert.ok(sent.text.includes(copy.sms));assert.match(sent.text,/Received at \(UTC\): \d{4}-/);
- assert.equal(await run({sms_consent:'yes',consent_version:'old'}),400);
+ assert.equal(await run({}),200);assert.match(sent.text,/NO — do not text/);assert.match(sent.text,/Promotional SMS consent: NO/);
+ assert.equal(await run({sms_consent:'yes',consent_version:copy.version}),200);assert.match(sent.text,/opt-in: YES/);assert.match(sent.text,/Promotional SMS consent: YES — combined opt-in/);assert.ok(sent.text.includes(copy.sms));assert.match(sent.text,/Received at \(UTC\): \d{4}-/);
+ assert.equal(await run({sms_consent:'yes',consent_version:'2026-10-23-v1'}),400);
  assert.equal(await run({sms_consent:true}),400);
  const html=fs.readFileSync('contact.html','utf8');
  const checkbox=html.match(/<input id="sms-consent"[^>]+>/)[0];
