@@ -1,3 +1,4 @@
+const confirmation = require('../lib/inquiry-confirmation');
 const consentCopy = require('../consent-copy.json');
 const { createHash } = require('node:crypto');
 const { parsePhoneNumberFromString } = require('libphonenumber-js/max');
@@ -55,7 +56,7 @@ module.exports = async function contact(req, res) {
   async function sendEmail(kind, payload) {
     const response = await fetch('https://api.resend.com/emails', {
       method: 'POST', signal: AbortSignal.timeout(10000),
-      headers: { Authorization: `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json', 'Idempotency-Key': `contact-v2-${kind}-${key}` },
+      headers: { Authorization: `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json', 'Idempotency-Key': `contact-${kind === 'confirmation' ? 'v3' : 'v2'}-${kind}-${key}` },
       body: JSON.stringify({ from: `Practice Perfect <${CONTACT_FROM_EMAIL}>`, ...payload })
     });
     const result = await response.json();
@@ -71,8 +72,7 @@ module.exports = async function contact(req, res) {
     const confirmationId = await sendEmail('confirmation', {
       to: [values.email], reply_to: CONTACT_TO_EMAIL,
       subject: 'We received your inquiry — Practice Perfect',
-      // Do not echo untrusted form messages or links into a recipient-facing email.
-      text: `Thank you for contacting Practice Perfect. We received your inquiry.\n\nNext step: schedule your strategy call\nhttps://calendly.com/mike-practiceperfect/30min\n\nSubmitting the inquiry form does not book an appointment. If you have not already selected and confirmed a time, use the link above to finish scheduling. Calendly will send a separate booking confirmation once your appointment is booked. If you already booked, you do not need to book again.\n\nQuestions or corrections? Reply to this email and our team will help.\n\nPractice Perfect\nhttps://practiceperfect.us`
+      ...confirmation
     });
     return res.status(200).json({ ok: true, requestId, confirmationId });
   } catch (error) {
