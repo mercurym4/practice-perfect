@@ -56,7 +56,7 @@ module.exports = async function contact(req, res) {
   async function sendEmail(kind, payload) {
     const response = await fetch('https://api.resend.com/emails', {
       method: 'POST', signal: AbortSignal.timeout(10000),
-      headers: { Authorization: `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json', 'Idempotency-Key': `contact-${kind === 'confirmation' ? 'v3' : 'v2'}-${kind}-${key}` },
+      headers: { Authorization: `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json', 'Idempotency-Key': `contact-${kind === 'confirmation' ? 'v4' : 'v2'}-${kind}-${key}` },
       body: JSON.stringify({ from: `Practice Perfect <${CONTACT_FROM_EMAIL}>`, ...payload })
     });
     const result = await response.json();
@@ -72,7 +72,7 @@ module.exports = async function contact(req, res) {
     const confirmationId = await sendEmail('confirmation', {
       to: [values.email], reply_to: CONTACT_TO_EMAIL,
       subject: 'We received your inquiry — Practice Perfect',
-      ...confirmation
+      ...confirmation(attribution)
     });
     return res.status(200).json({ ok: true, requestId, confirmationId });
   } catch (error) {

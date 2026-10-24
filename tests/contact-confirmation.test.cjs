@@ -36,7 +36,7 @@ async function submit(extra = {}) {
   assert.match(calls[1].payload.html, /Already booked/);
   assert.match(calls[1].payload.html, /practice-perfect-logo.png/);
   assert.ok(!calls[1].payload.html.includes('untrusted.example'));
-  assert.ok(calls[1].payload.html.includes('href="https://calendly.com/mike-practiceperfect/30min"'));
+  assert.ok(calls[1].payload.html.includes('href="https://calendly.com/mike-practiceperfect/30min?utm_content=inquiry-confirmation"'));
   Date.now = () => 1800000001000;
   await submit();
   assert.equal(accepted.size, 2, 'Retry sends neither email twice within receipt window');

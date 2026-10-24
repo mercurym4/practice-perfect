@@ -1,0 +1,18 @@
+const assert = require('node:assert/strict');
+const confirmation = require('../lib/inquiry-confirmation');
+const tagged = confirmation({ source:'Explee', medium:'email', campaign:'law-firms', email:'private@example.com' });
+const link = new URL(tagged.text.match(/https:\/\/calendly\.com\/\S+/)[0]);
+assert.equal(link.searchParams.get('utm_source'), 'explee');
+assert.equal(link.searchParams.get('utm_medium'), 'email');
+assert.equal(link.searchParams.get('utm_campaign'), 'law-firms');
+assert.equal(link.searchParams.get('utm_content'), 'inquiry-confirmation');
+assert.ok(!tagged.text.includes('private@example.com'));
+const links = [...tagged.html.matchAll(/href="(https:\/\/calendly.com[^\"]+)"/g)];
+assert.equal(links.length, 2);
+for(const match of links) assert.equal(match[1].replaceAll('&amp;', '&'), link.href);
+const invalid = confirmation({ source:'<script>', medium:'person@example.com', campaign:'x&email=private' });
+assert.ok(!invalid.text.includes('utm_source='));
+assert.ok(!invalid.text.includes('utm_campaign='));
+assert.ok(!invalid.html.includes('<script>'));
+assert.ok(confirmation().text.includes('utm_content=inquiry-confirmation'));
+console.log('PASS: original campaign preserved in both email links, HTML escaped, personal/invalid values excluded.');
