@@ -44,26 +44,41 @@ module.exports = async function contact(req, res) {
     if (typeof value === 'string' && /^[a-zA-Z][a-zA-Z0-9_-]{0,79}$/.test(value)) attribution[key] = value.toLowerCase();
   }
   values.attribution = attribution;
-  const receivedAt = new Date().toISOString();
+  // Keep retry payloads identical, including the explicitly rounded receipt time.
+  const receiptWindow = Math.floor(Date.now() / 600000);
+  const receivedAt = new Date(receiptWindow * 600000).toISOString();
   const { RESEND_API_KEY, CONTACT_FROM_EMAIL, CONTACT_TO_EMAIL } = process.env;
   if (!RESEND_API_KEY || !CONTACT_FROM_EMAIL || !CONTACT_TO_EMAIL) return res.status(503).json({ error: 'Your request was not sent. Please email mike@practiceperfect.us directly.' });
-  const text = `New Practice Perfect strategy-call request\n\nName: ${values.first_name} ${values.last_name}\nEmail: ${values.email}\nPhone: ${values.phone}\nCompany: ${values.company || '(not provided)'}\nInterest: ${values.interest || '(not provided)'}\n\nOpportunity:\n${values.message || '(not provided)'}\n\nLead source (visitor-reported campaign labels)\nSource: ${attribution.source || 'unknown'}\nMedium: ${attribution.medium || 'unknown'}\nCampaign: ${attribution.campaign || '(not tagged)'}\n\nContact permission record\nSMS inquiry/appointment/marketing opt-in: ${values.smsConsent ? 'YES' : 'NO — do not text'}\nPromotional SMS consent: ${values.smsConsent ? 'YES — combined opt-in' : 'NO'}\nReceived at (UTC): ${receivedAt}\nForm: https://practiceperfect.us/contact\nDisclosure version: ${values.consentVersion}\nSMS disclosure: ${consentCopy.sms}\nCall/email disclosure: ${consentCopy.callEmail}`;
+  const text = `New Practice Perfect strategy-call request\n\nName: ${values.first_name} ${values.last_name}\nEmail: ${values.email}\nPhone: ${values.phone}\nCompany: ${values.company || '(not provided)'}\nInterest: ${values.interest || '(not provided)'}\n\nOpportunity:\n${values.message || '(not provided)'}\n\nLead source (visitor-reported campaign labels)\nSource: ${attribution.source || 'unknown'}\nMedium: ${attribution.medium || 'unknown'}\nCampaign: ${attribution.campaign || '(not tagged)'}\n\nContact permission record\nSMS inquiry/appointment/marketing opt-in: ${values.smsConsent ? 'YES' : 'NO — do not text'}\nPromotional SMS consent: ${values.smsConsent ? 'YES — combined opt-in' : 'NO'}\nReceived at (UTC, rounded down to 10-minute window): ${receivedAt}\nForm: https://practiceperfect.us/contact\nDisclosure version: ${values.consentVersion}\nSMS disclosure: ${consentCopy.sms}\nCall/email disclosure: ${consentCopy.callEmail}`;
   // Identical retries within a ten-minute window use the provider's same send key.
-  const key = createHash('sha256').update(JSON.stringify(values) + Math.floor(Date.now() / 600000)).digest('hex');
-  try {
+  const key = createHash('sha256').update(JSON.stringify(values) + receiptWindow).digest('hex');
+  async function sendEmail(kind, payload) {
     const response = await fetch('https://api.resend.com/emails', {
       method: 'POST', signal: AbortSignal.timeout(10000),
-      headers: { Authorization: `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json', 'Idempotency-Key': `contact-${key}` },
-      body: JSON.stringify({ from: `Practice Perfect <${CONTACT_FROM_EMAIL}>`, to: [CONTACT_TO_EMAIL], reply_to: values.email, subject: 'Practice Perfect — Strategy Call Request', text })
+      headers: { Authorization: `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json', 'Idempotency-Key': `contact-v2-${kind}-${key}` },
+      body: JSON.stringify({ from: `Practice Perfect <${CONTACT_FROM_EMAIL}>`, ...payload })
     });
     const result = await response.json();
     if (!response.ok || !result.id) {
-      console.error('Contact email rejected', { status: response.status, code: result.name || 'unknown' });
+      console.error('Contact email rejected', { kind, status: response.status });
       throw new Error('Email provider did not accept request');
     }
-    return res.status(200).json({ ok: true, requestId: result.id });
+    return result.id;
+  }
+  let requestId;
+  try {
+    requestId = await sendEmail('owner', { to: [CONTACT_TO_EMAIL], reply_to: values.email, subject: 'Practice Perfect — Strategy Call Request', text });
+    const confirmationId = await sendEmail('confirmation', {
+      to: [values.email], reply_to: CONTACT_TO_EMAIL,
+      subject: 'We received your inquiry — Practice Perfect',
+      // Do not echo untrusted form messages or links into a recipient-facing email.
+      text: `Thank you for contacting Practice Perfect. We received your inquiry.\n\nNext step: schedule your strategy call\nhttps://calendly.com/mike-practiceperfect/30min\n\nSubmitting the inquiry form does not book an appointment. If you have not already selected and confirmed a time, use the link above to finish scheduling. Calendly will send a separate booking confirmation once your appointment is booked. If you already booked, you do not need to book again.\n\nQuestions or corrections? Reply to this email and our team will help.\n\nPractice Perfect\nhttps://practiceperfect.us`
+    });
+    return res.status(200).json({ ok: true, requestId, confirmationId });
   } catch (error) {
-    console.error('Contact email send failed', { code: error.name });
-    return res.status(502).json({ error: 'Your request could not be confirmed. Please try again or email mike@practiceperfect.us directly.' });
+    console.error('Contact email send failed', { code: error.name, ownerAccepted: Boolean(requestId) });
+    return res.status(502).json({ error: requestId
+      ? 'Your inquiry reached our team, but your confirmation email could not be sent. Please retry, or email mike@practiceperfect.us for help.'
+      : 'Your request could not be confirmed. Please try again or email mike@practiceperfect.us directly.' });
   }
 };

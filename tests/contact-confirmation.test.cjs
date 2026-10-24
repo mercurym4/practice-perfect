@@ -1,0 +1,49 @@
+const assert = require('node:assert/strict');
+const handler = require('../api/contact');
+process.env.RESEND_API_KEY = 'mock';
+process.env.CONTACT_FROM_EMAIL = 'sender@example.com';
+process.env.CONTACT_TO_EMAIL = 'owner@example.com';
+const body = { first_name: 'Test', last_name: 'Visitor', email: 'visitor@example.com', phone: '7135550123', message: 'https://untrusted.example' };
+async function submit(extra = {}) {
+  let status, result;
+  await handler({ method: 'POST', headers: { origin: 'https://practiceperfect.us', host: 'practiceperfect.us' }, body: { ...body, ...extra } }, { setHeader() {}, status(n) { status = n; return this; }, json(r) { result = r; } });
+  return { status, result };
+}
+(async () => {
+  const calls = [], accepted = new Map();
+  let fail = '';
+  global.fetch = async (url, options) => {
+    const payload = JSON.parse(options.body), key = options.headers['Idempotency-Key'];
+    calls.push({ payload, key });
+    if (key.includes(fail) && fail) return { ok: false, status: 503, json: async () => ({}) };
+    if (accepted.has(key)) assert.equal(options.body, accepted.get(key), 'Retry must preserve exact provider payload');
+    accepted.set(key, options.body);
+    return { ok: true, json: async () => ({ id: key }) };
+  };
+  const realNow = Date.now;
+  Date.now = () => 1800000000000;
+  let r = await submit();
+  assert.equal(r.status, 200);
+  assert.deepEqual(calls[0].payload.to, ['owner@example.com']);
+  assert.deepEqual(calls[1].payload.to, ['visitor@example.com']);
+  assert.equal(calls[1].payload.reply_to, 'owner@example.com');
+  assert.match(calls[1].payload.text, /https:\/\/calendly.com\/mike-practiceperfect\/30min/);
+  assert.match(calls[1].payload.text, /does not book an appointment/);
+  assert.ok(!calls[1].payload.text.includes('untrusted.example'));
+  assert.ok(r.result.confirmationId);
+  Date.now = () => 1800000001000;
+  await submit();
+  assert.equal(accepted.size, 2, 'Retry sends neither email twice within receipt window');
+  fail = 'confirmation';
+  r = await submit({ company: 'Retry test' });
+  assert.equal(r.status, 502);
+  assert.match(r.result.error, /inquiry reached our team/);
+  fail = '';
+  assert.equal((await submit({ company: 'Retry test' })).status, 200);
+  fail = 'owner';
+  const before = calls.length;
+  assert.equal((await submit({ company: 'Owner failure' })).status, 502);
+  assert.equal(calls.length, before + 1, 'Do not claim receipt when owner notification failed');
+  Date.now = realNow;
+  console.log('PASS: separate recipient receipt, scheduling instructions, safe content, partial failure and retry idempotency. No real emails sent.');
+})();
