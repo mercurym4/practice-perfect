@@ -18,6 +18,9 @@
       const result = await response.json();
       if (!response.ok || !result.ok) throw new Error(result.error || 'Your request was not sent. Please try again.');
       status.textContent = 'Thank you. Your strategy-call request has been sent. We’ll follow up using the email you provided.';
+      try { window.ppOpenBooking?.(); } catch (_) {
+        // A scheduler failure must not turn an accepted inquiry into an error.
+      }
       form.reset();
       // Count accepted requests once per page, without sending contact details.
       if (result.requestId && !trackedRequests.has(result.requestId)) {

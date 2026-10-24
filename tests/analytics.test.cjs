@@ -52,7 +52,8 @@ async function verifySubmission() {
   let response = { ok: true, result: { ok: true, requestId: 'accepted-request' } };
   const document = { getElementById: id => id === 'strategy-call-form' ? form : status };
   class FormData { constructor() { return [['email', 'private@example.com'], ['message', 'private message']]; } }
-  const window = { va: (type, payload) => events.push({ type, payload }) };
+  let bookingOpens = 0;
+  const window = { va: (type, payload) => events.push({ type, payload }), ppOpenBooking: () => { bookingOpens++; } };
   vm.runInNewContext(fs.readFileSync('contact-form.js', 'utf8'), {
     document, window, FormData, Set,
     fetch: async () => ({ ok: response.ok, json: async () => response.result })
@@ -68,6 +69,7 @@ async function verifySubmission() {
   await submit(event);
   assert.equal(events.length, 1, 'Failed submissions must not count');
   assert.equal(status.textContent, 'Request rejected');
+  assert.equal(bookingOpens, 2, 'Rejected submission must not open scheduling');
   assert.equal(button.disabled, false);
   response = { ok: true, result: { ok: true, requestId: 'second-request' } };
   window.va = () => { throw Error('Analytics unavailable'); };
