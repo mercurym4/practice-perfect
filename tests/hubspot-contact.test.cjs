@@ -1,0 +1,25 @@
+const assert = require('node:assert/strict');
+const sync = require('../lib/hubspot-contact');
+const values = { email:'test@example.com', first_name:'Test', last_name:'Lead', phone:'+1 713 555 0123', company:'Example', attribution:{source:'Explee',medium:'email',campaign:'law-firms'} };
+(async () => {
+ let calls=[]; let responses=[];
+ global.fetch=async(u,o)=>{calls.push({u,...o,body:o.body?JSON.parse(o.body):null}); const next=responses.shift();if(next instanceof Error)throw next;assert.ok(next,'Unexpected API call');return {status:next.status,ok:next.status>=200&&next.status<300,json:async()=>next.data};};
+ delete process.env.HUBSPOT_SYNC_ENABLED;
+ assert.equal((await sync(values)).status,'disabled');assert.equal(calls.length,0);
+ process.env.HUBSPOT_SYNC_ENABLED='true';delete process.env.HUBSPOT_ACCESS_TOKEN;
+ assert.equal((await sync(values)).reason,'missing_configuration');assert.equal(calls.length,0);
+ process.env.HUBSPOT_ACCESS_TOKEN='mock';
+ responses=[{status:404},{status:201,data:{id:'1'}}];
+ assert.equal((await sync(values)).status,'synced');
+ assert.equal(calls[1].body.properties.pp_booking_status,'unknown');
+ assert.equal(calls[1].body.properties.pp_campaign_source,'explee');
+ calls=[];responses=[{status:200,data:{id:'1',properties:{firstname:'Existing',phone:'Existing phone',pp_booking_status:'booked',pp_follow_up_status:'suppressed',pp_campaign_source:'facebook'}}},{status:200,data:{id:'1'}}];
+ assert.equal((await sync(values)).status,'synced');
+ for(const key of ['firstname','phone','pp_booking_status','pp_follow_up_status','pp_campaign_source'])assert.ok(!(key in calls[1].body.properties));
+ calls=[];responses=[{status:404},{status:409},{status:200,data:{id:'2',properties:{}}},{status:200,data:{id:'2'}}];
+ assert.equal((await sync(values)).status,'synced');assert.equal(calls[3].method,'PATCH');assert.ok(!('pp_booking_status' in calls[3].body.properties));
+ responses=[new Error('private provider data')];
+ assert.deepEqual(await sync(values),{status:'failed',reason:'provider_error'});
+ responses=[{status:401}];assert.equal((await sync(values)).status,'failed');
+ console.log('PASS: disabled by default, config checks, contact creation, existing values/status preservation, duplicate race recovery, safe provider failure.');
+})();

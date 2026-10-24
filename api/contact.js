@@ -1,3 +1,4 @@
+const syncContact = require('../lib/hubspot-contact');
 const confirmation = require('../lib/inquiry-confirmation');
 const consentCopy = require('../consent-copy.json');
 const { createHash } = require('node:crypto');
@@ -69,6 +70,8 @@ module.exports = async function contact(req, res) {
   let requestId;
   try {
     requestId = await sendEmail('owner', { to: [CONTACT_TO_EMAIL], reply_to: values.email, subject: 'Practice Perfect — Strategy Call Request', text });
+    const crm = await syncContact(values);
+    if (crm.status === 'failed') console.error('Contact CRM sync failed', { reason: crm.reason });
     const confirmationId = await sendEmail('confirmation', {
       to: [values.email], reply_to: CONTACT_TO_EMAIL,
       subject: 'We received your inquiry — Practice Perfect',
