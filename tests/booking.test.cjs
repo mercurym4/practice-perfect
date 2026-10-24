@@ -13,10 +13,11 @@ function setup() {
   'booking-title':{focus(){}},
   'booking-fallback':{addEventListener:(n,f)=>listeners.fallback=f}
  };
- const window={addEventListener:(n,f)=>listeners[n]=f,setTimeout:()=>1,clearTimeout(){},va:(t,p)=>events.push(p),Calendly:{initInlineWidget(o){assert.equal(o.url,'https://calendly.com/mike-practiceperfect/30min')}}};
+ let options;
+ const window={addEventListener:(n,f)=>listeners[n]=f,setTimeout:()=>1,clearTimeout(){},va:(t,p)=>events.push(p),Calendly:{initInlineWidget(o){options=o;assert.ok(o.url.startsWith('https://calendly.com/mike-practiceperfect/30min'))}}};
  const document={getElementById:id=>elements[id],createElement:()=>({}),head:{appendChild:s=>scripts.push(s)}};
- vm.runInNewContext(fs.readFileSync('booking.js','utf8'),{window,document});
- return {window,elements,scripts,events,listeners,frame};
+ vm.runInNewContext(fs.readFileSync('booking.js','utf8'),{window,document,URL});
+ return {window,elements,scripts,events,listeners,frame,getOptions:()=>options};
 }
 const t=setup();
 t.window.ppOpenBooking();t.window.ppOpenBooking();
@@ -38,3 +39,8 @@ const failed=setup();failed.window.va=()=>{throw Error('Analytics blocked')};fai
 assert.match(failed.elements['booking-status'].textContent,/scheduling link/);
 assert.equal(JSON.stringify(t.events),'[{"name":"scheduler_opened"},{"name":"strategy_call_booked"}]');
 console.log('PASS: one scheduler load; trusted frame/origin only; no conversion on time selection; booking deduplication; blocked-script fallback; analytics failure isolation; no personal details in events.');
+
+const tagged=setup();tagged.window.ppAttribution=()=>({source:'explee',medium:'email',campaign:'law-firms'});tagged.window.ppOpenBooking();tagged.scripts[0].onload();
+assert.ok(tagged.getOptions().url.includes('utm_campaign=law-firms'));
+assert.equal(tagged.elements['booking-fallback'].href,tagged.getOptions().url);
+assert.equal(tagged.events[0].data.source,'explee');

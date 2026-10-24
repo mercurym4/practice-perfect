@@ -28,10 +28,10 @@ assert.equal(tracking.redact({ url: 'https://practiceperfect.us/contact?email=pr
   'https://practiceperfect.us/contact');
 tracking.click('https://practiceperfect.us/services/seo-marketing?private=value#anything');
 assert.equal(tracking.events[0].payload.name, 'service_clicked');
-assert.equal(JSON.stringify(tracking.events[0].payload.data), '{"service":"seo-marketing"}');
+assert.equal(JSON.stringify(tracking.events[0].payload.data), '{"source":"direct","medium":"none","service":"seo-marketing"}');
 tracking.click('https://practiceperfect.us/contact#contact-form', 'header');
 assert.equal(tracking.events[1].payload.name, 'strategy_call_clicked');
-assert.equal(JSON.stringify(tracking.events[1].payload.data), '{"location":"header"}');
+assert.equal(JSON.stringify(tracking.events[1].payload.data), '{"source":"direct","medium":"none","location":"header"}');
 tracking.click('https://other.example/contact');
 tracking.click('https://practiceperfect.us/services/private-input');
 assert.equal(tracking.events.length, 2);

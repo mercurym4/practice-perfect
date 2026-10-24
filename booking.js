@@ -6,7 +6,7 @@
   let started = false;
   let booked = false;
   function track(name) {
-    try { window.va?.('event', { name }); } catch (_) { /* Scheduling must work without analytics. */ }
+    try { window.va?.('event', { name, ...(window.ppAttribution ? { data: window.ppAttribution() } : {}) }); } catch (_) { /* Scheduling must work without analytics. */ }
   }
   window.addEventListener('message', (event) => {
     const frame = embed.querySelector('iframe');
@@ -21,6 +21,12 @@
   });
   document.getElementById('booking-fallback').addEventListener('click', () => track('scheduler_external_clicked'));
   window.ppOpenBooking = () => {
+    const attribution = window.ppAttribution?.() || {};
+    const bookingUrl = new URL('https://calendly.com/mike-practiceperfect/30min');
+    for (const key of ['source', 'medium', 'campaign']) {
+      if (attribution[key]) bookingUrl.searchParams.set('utm_' + key, attribution[key]);
+    }
+    document.getElementById('booking-fallback').href = bookingUrl.href;
     panel.hidden = false;
     document.getElementById('strategy-call-form').hidden = true;
     document.getElementById('booking-title').focus({ preventScroll: true });
@@ -38,7 +44,7 @@
       window.clearTimeout(timer);
       try {
         window.Calendly.initInlineWidget({
-          url: 'https://calendly.com/mike-practiceperfect/30min',
+          url: bookingUrl.href,
           parentElement: embed
         });
         status.textContent = 'Choose an available time below, or open scheduling in a new tab.';

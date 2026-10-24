@@ -15,7 +15,7 @@
     try {
       const response = await fetch('/api/contact', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(Object.fromEntries(new FormData(form)))
+        body: JSON.stringify({ ...Object.fromEntries(new FormData(form)), attribution: window.ppAttribution?.() || {} })
       });
       const result = await response.json();
       if (result.field === 'phone' && phoneInput) {
@@ -33,7 +33,7 @@
       if (result.requestId && !trackedRequests.has(result.requestId)) {
         trackedRequests.add(result.requestId);
         try {
-          window.va?.('event', { name: 'strategy_call_sent' });
+          window.va?.('event', { name: 'strategy_call_sent', ...(window.ppAttribution ? { data: window.ppAttribution() } : {}) });
         } catch (_) {
           // Measurement must never change the successful form response.
         }
