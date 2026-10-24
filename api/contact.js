@@ -1,3 +1,4 @@
+const consentCopy = require('../consent-copy.json');
 const { createHash } = require('node:crypto');
 const { parsePhoneNumberFromString } = require('libphonenumber-js/max');
 
@@ -33,9 +34,14 @@ module.exports = async function contact(req, res) {
     return res.status(400).json({ field: 'phone', error: 'Enter a valid phone number with area code. For numbers outside the U.S., include + and the country code.' });
   }
   values.phone = phone.formatInternational() + (phone.ext ? ` ext. ${phone.ext}` : '');
+  if (body.sms_consent != null && body.sms_consent !== 'yes') return res.status(400).json({ error: 'Please check your SMS preference.' });
+  if (body.sms_consent === 'yes' && body.consent_version !== consentCopy.version) return res.status(400).json({ error: 'Please refresh the page and review the SMS consent before submitting.' });
+  values.smsConsent = body.sms_consent === 'yes';
+  values.consentVersion = body.consent_version === consentCopy.version ? consentCopy.version : 'not supplied';
+  const receivedAt = new Date().toISOString();
   const { RESEND_API_KEY, CONTACT_FROM_EMAIL, CONTACT_TO_EMAIL } = process.env;
   if (!RESEND_API_KEY || !CONTACT_FROM_EMAIL || !CONTACT_TO_EMAIL) return res.status(503).json({ error: 'Your request was not sent. Please email mike@practiceperfect.us directly.' });
-  const text = `New Practice Perfect strategy-call request\n\nName: ${values.first_name} ${values.last_name}\nEmail: ${values.email}\nPhone: ${values.phone}\nCompany: ${values.company || '(not provided)'}\nInterest: ${values.interest || '(not provided)'}\n\nOpportunity:\n${values.message || '(not provided)'}`;
+  const text = `New Practice Perfect strategy-call request\n\nName: ${values.first_name} ${values.last_name}\nEmail: ${values.email}\nPhone: ${values.phone}\nCompany: ${values.company || '(not provided)'}\nInterest: ${values.interest || '(not provided)'}\n\nOpportunity:\n${values.message || '(not provided)'}\n\nContact permission record\nSMS inquiry/appointment opt-in: ${values.smsConsent ? 'YES' : 'NO — do not text'}\nPromotional SMS consent: NOT REQUESTED\nReceived at (UTC): ${receivedAt}\nForm: https://practiceperfect.us/contact\nDisclosure version: ${values.consentVersion}\nSMS disclosure: ${consentCopy.sms}\nCall/email disclosure: ${consentCopy.callEmail}`;
   // Identical retries within a ten-minute window use the provider's same send key.
   const key = createHash('sha256').update(JSON.stringify(values) + Math.floor(Date.now() / 600000)).digest('hex');
   try {
