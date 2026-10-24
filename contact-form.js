@@ -3,6 +3,8 @@
   const status = document.getElementById('contact-status');
   const button = form.querySelector('button[type="submit"]');
   const trackedRequests = new Set();
+  const phoneInput = document.getElementById('phone');
+  phoneInput?.addEventListener('input', () => phoneInput.setCustomValidity(''));
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
     if (button.disabled) return;
@@ -16,6 +18,11 @@
         body: JSON.stringify(Object.fromEntries(new FormData(form)))
       });
       const result = await response.json();
+      if (result.field === 'phone' && phoneInput) {
+        phoneInput.setCustomValidity(result.error);
+        phoneInput.reportValidity();
+        phoneInput.focus();
+      }
       if (!response.ok || !result.ok) throw new Error(result.error || 'Your request was not sent. Please try again.');
       status.textContent = 'Thank you. Your details have been received. Next: choose your call time in the calendar below to finish booking.';
       try { window.ppOpenBooking?.(); } catch (_) {

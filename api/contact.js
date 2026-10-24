@@ -1,4 +1,5 @@
 const { createHash } = require('node:crypto');
+const { parsePhoneNumberFromString } = require('libphonenumber-js/max');
 
 module.exports = async function contact(req, res) {
   res.setHeader('Cache-Control', 'no-store');
@@ -17,7 +18,7 @@ module.exports = async function contact(req, res) {
     return res.status(400).json({ error: 'Please check your form details.' });
   }
   if (body.website) return res.status(400).json({ error: 'Please try again.' });
-  const limits = { first_name: 100, last_name: 100, email: 254, company: 200, interest: 100, message: 5000 };
+  const limits = { first_name: 100, last_name: 100, email: 254, phone: 40, company: 200, interest: 100, message: 5000 };
   const values = {};
   for (const [key, limit] of Object.entries(limits)) {
     if (body[key] != null && typeof body[key] !== 'string') return res.status(400).json({ error: 'Please check your form details.' });
@@ -27,9 +28,14 @@ module.exports = async function contact(req, res) {
   if (!values.first_name || !values.last_name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email)) {
     return res.status(400).json({ error: 'Please provide your name and a valid email address.' });
   }
+  const phone = parsePhoneNumberFromString(values.phone, { defaultCountry: 'US', extract: false });
+  if (!phone || !phone.isValid()) {
+    return res.status(400).json({ field: 'phone', error: 'Enter a valid phone number with area code. For numbers outside the U.S., include + and the country code.' });
+  }
+  values.phone = phone.formatInternational() + (phone.ext ? ` ext. ${phone.ext}` : '');
   const { RESEND_API_KEY, CONTACT_FROM_EMAIL, CONTACT_TO_EMAIL } = process.env;
   if (!RESEND_API_KEY || !CONTACT_FROM_EMAIL || !CONTACT_TO_EMAIL) return res.status(503).json({ error: 'Your request was not sent. Please email mike@practiceperfect.us directly.' });
-  const text = `New Practice Perfect strategy-call request\n\nName: ${values.first_name} ${values.last_name}\nEmail: ${values.email}\nCompany: ${values.company || '(not provided)'}\nInterest: ${values.interest || '(not provided)'}\n\nOpportunity:\n${values.message || '(not provided)'}`;
+  const text = `New Practice Perfect strategy-call request\n\nName: ${values.first_name} ${values.last_name}\nEmail: ${values.email}\nPhone: ${values.phone}\nCompany: ${values.company || '(not provided)'}\nInterest: ${values.interest || '(not provided)'}\n\nOpportunity:\n${values.message || '(not provided)'}`;
   // Identical retries within a ten-minute window use the provider's same send key.
   const key = createHash('sha256').update(JSON.stringify(values) + Math.floor(Date.now() / 600000)).digest('hex');
   try {

@@ -50,7 +50,7 @@ async function verifySubmission() {
   const form = { querySelector: () => button, reset: () => { resets++; },
     addEventListener: (_, fn) => { submit = fn; } };
   let response = { ok: true, result: { ok: true, requestId: 'accepted-request' } };
-  const document = { getElementById: id => id === 'strategy-call-form' ? form : status };
+  const document = { getElementById: id => id === 'strategy-call-form' ? form : id === 'phone' ? null : status };
   class FormData { constructor() { return [['email', 'private@example.com'], ['message', 'private message']]; } }
   let bookingOpens = 0;
   const window = { va: (type, payload) => events.push({ type, payload }), ppOpenBooking: () => { bookingOpens++; } };
